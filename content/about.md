@@ -27,8 +27,7 @@ Further elaboration about me (in all its boring detail) is available on [LinkedI
 I enjoy learning and contributing to open source projects. This site is a convenient place
 to collect notes for my future, forgetful self.
 
-I also thought it would be neat ot own Swiss property in the form of this TLD. For only
-$15/year, I get to be available at sheets.ch/ad :-)
+I also thought it would be neat to rent Swiss property in the form of this TLD. For only $15/year, I get to be available at sheets.ch/ad :-)
 
 ## Get In Touch
 
