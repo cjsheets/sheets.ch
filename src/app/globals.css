@@ -19,3 +19,17 @@ body {
   background: var(--background);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+header {
+  background-color: var(--foreground);
+  color: var(--background);
+}
+
+nav a {
+  color: var(--background);
+  text-decoration: none;
+}
+
+nav a:hover {
+  text-decoration: underline;
+}
