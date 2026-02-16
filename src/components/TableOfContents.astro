@@ -1,0 +1,228 @@
+---
+export interface Heading {
+  depth: number;
+  slug: string;
+  text: string;
+}
+
+interface Props {
+  headings: Heading[];
+}
+
+const { headings } = Astro.props;
+const filteredHeadings = headings.filter((h) => h.depth >= 2 && h.depth <= 3);
+---
+
+{filteredHeadings.length > 0 && (
+  <aside class="toc" aria-label="Table of contents">
+    <div class="toc__inner">
+      <h2 class="toc__title">Contents</h2>
+      <nav>
+        <ul class="toc__list" role="list">
+          {filteredHeadings.map((heading) => (
+            <li
+              class:list={['toc__item', { 'toc__item--sub': heading.depth === 3 }]}
+            >
+              <a
+                href={`#${heading.slug}`}
+                class="toc__link"
+                data-toc-link
+                data-heading-slug={heading.slug}
+              >
+                {heading.text}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </nav>
+    </div>
+  </aside>
+)}
+
+<style>
+  .toc {
+    position: sticky;
+    top: calc(var(--header-height) + 2rem);
+    align-self: start;
+    max-height: calc(100vh - var(--header-height) - 4rem);
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-border) transparent;
+  }
+
+  .toc__inner {
+    padding-left: 1.25rem;
+    border-left: 2px solid var(--color-border);
+  }
+
+  .toc__title {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--color-text-muted);
+    margin-bottom: 0.75rem;
+    margin-top: 0;
+  }
+
+  .toc__list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .toc__item {
+    margin-bottom: 0.1em;
+  }
+
+  .toc__item--sub {
+    padding-left: 0.85rem;
+  }
+
+  .toc__link {
+    display: block;
+    padding: 0.2em 0.5em;
+    font-size: 0.82rem;
+    line-height: 1.4;
+    color: var(--color-text-muted);
+    text-decoration: none;
+    border-radius: 4px;
+    transition: color var(--transition-fast), background var(--transition-fast),
+      border-color var(--transition-fast);
+  }
+
+  .toc__link:hover {
+    color: var(--color-text);
+    background: var(--color-code-bg);
+  }
+
+  .toc__link.active {
+    color: var(--color-accent);
+    font-weight: 600;
+    background: rgba(26, 115, 232, 0.08);
+  }
+
+  /* Progress indicator bar on the left border for active section */
+  .toc__inner {
+    position: relative;
+  }
+
+  @media (max-width: 1100px) {
+    .toc {
+      display: none;
+    }
+  }
+</style>
+
+<script>
+  function initToc() {
+    const tocLinks = document.querySelectorAll<HTMLAnchorElement>('[data-toc-link]');
+    if (tocLinks.length === 0) return;
+
+    const headingSlugs = Array.from(tocLinks).map((link) => link.dataset.headingSlug!);
+    const headingElements = headingSlugs
+      .map((slug) => document.getElementById(slug))
+      .filter(Boolean) as HTMLElement[];
+
+    if (headingElements.length === 0) return;
+
+    let activeSlug = '';
+
+    function setActive(slug: string) {
+      if (slug === activeSlug) return;
+      activeSlug = slug;
+      tocLinks.forEach((link) => {
+        link.classList.toggle('active', link.dataset.headingSlug === slug);
+      });
+    }
+
+    // Use IntersectionObserver for efficient scroll tracking
+    const observerOptions: IntersectionObserverInit = {
+      root: null,
+      rootMargin: `-${getComputedStyle(document.documentElement).getPropertyValue('--header-height').trim() || '60px'} 0px -60% 0px`,
+      threshold: 0,
+    };
+
+    const visibleHeadings = new Set<string>();
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        const slug = entry.target.id;
+        if (entry.isIntersecting) {
+          visibleHeadings.add(slug);
+        } else {
+          visibleHeadings.delete(slug);
+        }
+      });
+
+      // Pick the topmost visible heading
+      if (visibleHeadings.size > 0) {
+        for (const el of headingElements) {
+          if (visibleHeadings.has(el.id)) {
+            setActive(el.id);
+            break;
+          }
+        }
+      }
+    }, observerOptions);
+
+    headingElements.forEach((el) => observer.observe(el));
+
+    // Also listen for scroll to handle edge case at the very top/bottom
+    let ticking = false;
+    function onScroll() {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        const headerOffset = parseInt(
+          getComputedStyle(document.documentElement).getPropertyValue('--header-height') || '60',
+          10
+        );
+
+        // At the bottom of page, activate last heading
+        if (window.innerHeight + window.scrollY >= document.body.scrollHeight - 10) {
+          setActive(headingElements[headingElements.length - 1].id);
+          ticking = false;
+          return;
+        }
+
+        // Fallback: find the heading closest to the top of the viewport
+        if (visibleHeadings.size === 0) {
+          let closest = headingElements[0];
+          let closestDist = Infinity;
+          for (const el of headingElements) {
+            const dist = Math.abs(el.getBoundingClientRect().top - headerOffset - 20);
+            if (el.getBoundingClientRect().top <= headerOffset + 40 && dist < closestDist) {
+              closest = el;
+              closestDist = dist;
+            }
+          }
+          if (closest) setActive(closest.id);
+        }
+
+        ticking = false;
+      });
+    }
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+
+    // Set initial active heading
+    if (headingElements.length > 0) {
+      setActive(headingElements[0].id);
+    }
+
+    // Smooth scroll on TOC click
+    tocLinks.forEach((link) => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        const target = document.getElementById(link.dataset.headingSlug!);
+        target?.scrollIntoView({ behavior: 'smooth' });
+        history.replaceState(null, '', `#${link.dataset.headingSlug}`);
+      });
+    });
+  }
+
+  // Run on initial load and on Astro page transitions
+  initToc();
+  document.addEventListener('astro:page-load', initToc);
+</script>

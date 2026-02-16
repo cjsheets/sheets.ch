@@ -1,0 +1,291 @@
+---
+interface Props {
+  contentMode?: boolean;
+  pageTitle?: string;
+}
+
+const { contentMode = false, pageTitle } = Astro.props;
+
+const navLinks = [
+  { href: '/', label: 'Home' },
+  { href: '/posts', label: 'Posts' },
+  { href: '/projects', label: 'Projects' },
+  { href: '/resume', label: 'Resume' },
+];
+
+const currentPath = Astro.url.pathname;
+---
+
+<header class:list={['site-header', { 'site-header--content': contentMode }]}>
+  <nav class="site-header__nav container container--wide">
+    <div class="site-header__left">
+      <button class="site-header__menu-btn" aria-label="Toggle menu" aria-expanded="false">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <line x1="3" y1="6" x2="21" y2="6" class="line-top" />
+          <line x1="3" y1="12" x2="21" y2="12" class="line-mid" />
+          <line x1="3" y1="18" x2="21" y2="18" class="line-bot" />
+        </svg>
+      </button>
+      <div class="site-header__title-wrapper">
+        <a href="/" class="site-header__logo" data-header-logo>sheets.ch</a>
+        {contentMode && pageTitle && (
+          <span class="site-header__page-title" data-header-page-title>{pageTitle}</span>
+        )}
+      </div>
+    </div>
+    <ul class="site-header__links" role="list">
+      {navLinks.map(({ href, label }) => (
+        <li>
+          <a
+            href={href}
+            class:list={['nav-link', { active: currentPath === href || (href !== '/' && currentPath.startsWith(href)) }]}
+          >
+            {label}
+          </a>
+        </li>
+      ))}
+    </ul>
+  </nav>
+</header>
+
+<style>
+  .site-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    height: var(--header-height);
+    background: var(--color-header-bg);
+    backdrop-filter: saturate(180%) blur(16px);
+    -webkit-backdrop-filter: saturate(180%) blur(16px);
+    border-bottom: 1px solid var(--color-border);
+    transition: background var(--transition-normal);
+  }
+
+  .site-header__nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 100%;
+  }
+
+  .site-header__left {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    min-width: 0;
+  }
+
+  .site-header__title-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    min-width: 0;
+    height: 1.5em;
+  }
+
+  .site-header__logo {
+    font-weight: 800;
+    font-size: 1.15rem;
+    color: var(--color-text);
+    letter-spacing: -0.02em;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: opacity 300ms ease, transform 300ms ease;
+  }
+
+  .site-header__logo:hover {
+    color: var(--color-accent);
+  }
+
+  .site-header__page-title {
+    position: absolute;
+    left: 0;
+    top: 50%;
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: var(--color-text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 50vw;
+    opacity: 0;
+    transform: translateY(4px) translateY(-50%);
+    transition: opacity 300ms ease, transform 300ms ease;
+    pointer-events: none;
+  }
+
+  /* When h1 has scrolled away, swap the title */
+  .site-header--scrolled .site-header__logo {
+    opacity: 0;
+    transform: translateY(-6px);
+    pointer-events: none;
+  }
+
+  .site-header--scrolled .site-header__page-title {
+    opacity: 1;
+    transform: translateY(0) translateY(-50%);
+    pointer-events: auto;
+  }
+
+  .site-header__links {
+    display: flex;
+    gap: 0.25rem;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  /* Nav link with frosted glass hover underline effect */
+  .nav-link {
+    position: relative;
+    display: inline-block;
+    padding: 0.4em 0.75em;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--color-text-secondary);
+    text-decoration: none;
+    border-radius: 6px;
+    transition: color var(--transition-fast), background var(--transition-fast);
+  }
+
+  .nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: 2px;
+    left: 50%;
+    transform: translateX(-50%) scaleX(0);
+    width: 60%;
+    height: 2px;
+    background: var(--color-accent);
+    border-radius: 1px;
+    transition: transform var(--transition-normal);
+  }
+
+  .nav-link:hover {
+    color: var(--color-text);
+    background: rgba(26, 115, 232, 0.08);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+
+  .nav-link:hover::after {
+    transform: translateX(-50%) scaleX(1);
+  }
+
+  .nav-link.active {
+    color: var(--color-accent);
+    font-weight: 600;
+  }
+
+  .nav-link.active::after {
+    transform: translateX(-50%) scaleX(1);
+  }
+
+  /* Menu button — hidden by default, shown on mobile OR in content mode */
+  .site-header__menu-btn {
+    display: none;
+    background: none;
+    border: none;
+    color: var(--color-text);
+    cursor: pointer;
+    padding: 0.25rem;
+    flex-shrink: 0;
+  }
+
+  /* Content mode: always collapse nav into hamburger */
+  .site-header--content .site-header__menu-btn {
+    display: block;
+  }
+
+  .site-header--content .site-header__links {
+    display: none;
+    position: absolute;
+    top: var(--header-height);
+    left: 0;
+    right: 0;
+    flex-direction: column;
+    background: var(--color-header-bg);
+    backdrop-filter: saturate(180%) blur(16px);
+    -webkit-backdrop-filter: saturate(180%) blur(16px);
+    border-bottom: 1px solid var(--color-border);
+    padding: 0.75rem 1.5rem;
+    gap: 0;
+  }
+
+  .site-header--content .site-header__links.open {
+    display: flex;
+  }
+
+  /* Mobile: always collapse */
+  @media (max-width: 640px) {
+    .site-header__links {
+      display: none;
+      position: absolute;
+      top: var(--header-height);
+      left: 0;
+      right: 0;
+      flex-direction: column;
+      background: var(--color-header-bg);
+      backdrop-filter: saturate(180%) blur(16px);
+      -webkit-backdrop-filter: saturate(180%) blur(16px);
+      border-bottom: 1px solid var(--color-border);
+      padding: 0.75rem 1.5rem;
+      gap: 0;
+    }
+
+    .site-header__links.open {
+      display: flex;
+    }
+
+    .site-header__menu-btn {
+      display: block;
+    }
+
+    .nav-link {
+      padding: 0.6em 0.5em;
+    }
+  }
+</style>
+
+<script>
+  function initHeader() {
+    const btn = document.querySelector('.site-header__menu-btn');
+    const links = document.querySelector('.site-header__links');
+    btn?.addEventListener('click', () => {
+      const expanded = btn.getAttribute('aria-expanded') === 'true';
+      btn.setAttribute('aria-expanded', String(!expanded));
+      links?.classList.toggle('open');
+    });
+
+    // Title crossfade: observe the article h1
+    const header = document.querySelector('.site-header--content') as HTMLElement | null;
+    if (!header) return;
+
+    const articleH1 = document.querySelector('.post-title, article h1, .page-header h1') as HTMLElement | null;
+    if (!articleH1) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            header.classList.remove('site-header--scrolled');
+          } else {
+            header.classList.add('site-header--scrolled');
+          }
+        }
+      },
+      {
+        root: null,
+        rootMargin: `-${getComputedStyle(document.documentElement).getPropertyValue('--header-height').trim() || '60px'} 0px 0px 0px`,
+        threshold: 0,
+      }
+    );
+
+    observer.observe(articleH1);
+  }
+
+  initHeader();
+  document.addEventListener('astro:page-load', initHeader);
+</script>

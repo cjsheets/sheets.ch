@@ -1,0 +1,209 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+const posts = (await getCollection('posts'))
+  .filter((post) => !post.data.draft)
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
+  .slice(0, 5);
+
+const projects = (await getCollection('projects'))
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
+  .filter((p) => p.data.featured)
+  .slice(0, 3);
+
+const formatDate = (d: Date) =>
+  d.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+---
+
+<BaseLayout title="Home">
+  <div class="container">
+    <section class="hero">
+      <h1>Hello!</h1>
+      <p class="hero__subtitle">
+        I'm Chad — a software developer at Microsoft building solutions for Educators.
+        Originally from Ohio, currently in the Seattle area. I like software, music, coffee and beer.
+        This site is a convenient place to collect notes for my future, forgetful self.
+      </p>
+    </section>
+
+    <section class="section">
+      <div class="section__header">
+        <h2>Recent Posts</h2>
+        <a href="/posts" class="section__link">View all &rarr;</a>
+      </div>
+      <ul class="post-list" role="list">
+        {posts.map((post) => (
+          <li class="post-list__item">
+            <a href={`/posts/${post.id}`} class="post-list__link">
+              <span class="post-list__title">{post.data.title}</span>
+              <time class="post-list__date" datetime={post.data.date.toISOString()}>
+                {formatDate(post.data.date)}
+              </time>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </section>
+
+    {projects.length > 0 && (
+      <section class="section">
+        <div class="section__header">
+          <h2>Featured Projects</h2>
+          <a href="/projects" class="section__link">View all &rarr;</a>
+        </div>
+        <div class="project-grid">
+          {projects.map((project) => (
+            <a
+              href={project.data.url || `/projects/${project.id}`}
+              class="project-card"
+              target={project.data.url ? '_blank' : undefined}
+              rel={project.data.url ? 'noopener' : undefined}
+            >
+              <h3 class="project-card__title">{project.data.title}</h3>
+              <p class="project-card__desc">{project.data.description}</p>
+              <div class="project-card__tags">
+                {project.data.tags.map((tag) => (
+                  <span class="tag-sm">{tag}</span>
+                ))}
+              </div>
+            </a>
+          ))}
+        </div>
+      </section>
+    )}
+  </div>
+</BaseLayout>
+
+<style>
+  .hero {
+    padding: 3rem 0 2rem;
+  }
+
+  .hero h1 {
+    font-size: 2.5rem;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    margin-bottom: 0.5rem;
+  }
+
+  .hero__subtitle {
+    font-size: 1.15rem;
+    color: var(--color-text-secondary);
+    max-width: 520px;
+    line-height: 1.6;
+  }
+
+  .section {
+    margin-top: 3rem;
+  }
+
+  .section__header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+  }
+
+  .section__header h2 {
+    font-size: 1.25rem;
+    margin: 0;
+  }
+
+  .section__link {
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--color-accent);
+  }
+
+  /* Post list */
+  .post-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .post-list__item {
+    margin: 0;
+  }
+
+  .post-list__link {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 1rem;
+    padding: 0.65rem 0;
+    border-bottom: 1px solid var(--color-border);
+    text-decoration: none;
+    transition: background var(--transition-fast);
+  }
+
+  .post-list__link:hover {
+    background: var(--color-code-bg);
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+    margin-left: -0.5rem;
+    margin-right: -0.5rem;
+    border-radius: 6px;
+  }
+
+  .post-list__title {
+    font-weight: 500;
+    color: var(--color-text);
+  }
+
+  .post-list__date {
+    font-size: 0.8rem;
+    color: var(--color-text-muted);
+    white-space: nowrap;
+  }
+
+  /* Project cards */
+  .project-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 1rem;
+  }
+
+  .project-card {
+    display: block;
+    padding: 1.25rem;
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    text-decoration: none;
+    transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+  }
+
+  .project-card:hover {
+    border-color: var(--color-accent);
+    box-shadow: 0 2px 12px rgba(26, 115, 232, 0.08);
+  }
+
+  .project-card__title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--color-text);
+    margin: 0 0 0.35rem;
+  }
+
+  .project-card__desc {
+    font-size: 0.85rem;
+    color: var(--color-text-secondary);
+    margin-bottom: 0.75rem;
+    line-height: 1.5;
+  }
+
+  .project-card__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.3rem;
+  }
+
+  .tag-sm {
+    font-size: 0.7rem;
+    padding: 0.15em 0.5em;
+    background: var(--color-code-bg);
+    color: var(--color-text-muted);
+    border-radius: 3px;
+  }
+</style>

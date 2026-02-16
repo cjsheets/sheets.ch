@@ -1,0 +1,115 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+const projects = (await getCollection('projects'))
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+---
+
+<BaseLayout title="Projects" description="Collection of projects and things I've built.">
+  <div class="container">
+    <header class="page-header">
+      <h1>Projects</h1>
+      <p class="page-subtitle">Things I've built and contributed to.</p>
+    </header>
+
+    <div class="project-grid">
+      {projects.map((project) => (
+        <div class="project-card">
+          <h3 class="project-card__title">{project.data.title}</h3>
+          <p class="project-card__desc">{project.data.description}</p>
+          <div class="project-card__tags">
+            {project.data.tags.map((tag) => (
+              <span class="tag-sm">{tag}</span>
+            ))}
+          </div>
+          <div class="project-card__links">
+            {project.data.url && (
+              <a href={project.data.url} target="_blank" rel="noopener">
+                Live &rarr;
+              </a>
+            )}
+            {project.data.repo && (
+              <a href={project.data.repo} target="_blank" rel="noopener">
+                Source &rarr;
+              </a>
+            )}
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .page-header {
+    padding: 2rem 0 1.5rem;
+  }
+
+  .page-header h1 {
+    font-size: 2rem;
+    font-weight: 800;
+    margin-bottom: 0.35rem;
+  }
+
+  .page-subtitle {
+    color: var(--color-text-secondary);
+    font-size: 1.05rem;
+  }
+
+  .project-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.25rem;
+    margin-top: 1rem;
+  }
+
+  .project-card {
+    padding: 1.5rem;
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    transition: border-color var(--transition-fast);
+  }
+
+  .project-card:hover {
+    border-color: var(--color-accent);
+  }
+
+  .project-card__title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin: 0 0 0.4rem;
+  }
+
+  .project-card__desc {
+    font-size: 0.9rem;
+    color: var(--color-text-secondary);
+    line-height: 1.5;
+    margin-bottom: 0.75rem;
+  }
+
+  .project-card__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.3rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .tag-sm {
+    font-size: 0.7rem;
+    padding: 0.15em 0.5em;
+    background: var(--color-code-bg);
+    color: var(--color-text-muted);
+    border-radius: 3px;
+  }
+
+  .project-card__links {
+    display: flex;
+    gap: 1rem;
+  }
+
+  .project-card__links a {
+    font-size: 0.8rem;
+    font-weight: 500;
+  }
+</style>
