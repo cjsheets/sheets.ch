@@ -8,7 +8,7 @@
   --color-surface: #f8f9fa;
   --color-text: #202124;
   --color-text-secondary: #5f6368;
-  --color-text-muted: #80868b;
+  --color-text-muted: #6b7075;
   --color-accent: #1a73e8;
   --color-accent-hover: #174ea6;
   --color-border: #dadce0;
@@ -36,7 +36,7 @@ html[data-theme="dark"] {
     --color-surface: #292a2d;
     --color-text: #e8eaed;
     --color-text-secondary: #9aa0a6;
-    --color-text-muted: #80868b;
+    --color-text-muted: #9aa0a6;
     --color-accent: #8ab4f8;
     --color-accent-hover: #aecbfa;
     --color-border: #3c4043;
