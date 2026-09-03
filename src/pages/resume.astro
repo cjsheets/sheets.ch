@@ -1,204 +1,94 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+
+const experience = [
+  {
+    when: '2026 –',
+    org: 'Commerce Platforms',
+    title: 'Principal AI Engineer',
+    body: 'Advise teams across the org on architecture and UX for AI-enabled enterprise experiences. Set validation-first AI-assisted engineering as the team default: agents generate changes, static analysis and automated tests decide what merges. Hardened authentication redirects, dependency governance, and package-version controls so faster development did not loosen security.',
+  },
+  {
+    when: '2025 – 2026',
+    org: 'Commerce Platforms',
+    title: 'Senior AI Engineer',
+    body: 'Turned a product-specific assistant into a reusable UI platform for several enterprise workflows. Built a TypeScript monorepo with parallel delivery pipelines, rewrote a legacy JavaScript backend as a typed service, and laid the Playwright foundation for visual, unit, and end-to-end checks at pull-request time.',
+  },
+  {
+    when: '2024 – 2025',
+    org: 'Microsoft 365 Education',
+    title: 'Engineering Manager',
+    body: 'Led a UI engineering team through legacy-platform retirement, security commitments, and new AI-assisted learning features while staying hands-on in code. Ran infrastructure and identity migrations with no customer-visible downtime, rebuilt telemetry lost in a platform migration, and cut the UI backlog roughly in half.',
+  },
+  {
+    when: '2021 – 2024',
+    org: 'Microsoft 365 Education',
+    title: 'Senior Software Engineer',
+    body: 'UI architect for a major Education web app, shipping on schedule with performance budgets and bundle-size gates from the start. Built the shared Playwright framework, from hackathon project to the test platform for several products. Led UI work on the first generative-AI features, and owned threat modeling, CSP, and MSAL auth migration. Co-inventor on a patent application for AI-assisted assessment generation.',
+  },
+  {
+    when: '2017 – 2021',
+    org: 'Microsoft 365 Education',
+    title: 'Software Engineer to Senior Software Engineer',
+    body: 'Shipped grading, assessment, content-creation, and Teams-sharing experiences on desktop and mobile, going from contract engineer to UI technical lead. Designed a resource-integration framework so new learning tools could plug in without custom host-app work, and kept the product fast through the remote-learning surge.',
+  },
+  {
+    when: '2009 – 2017',
+    org: 'Schlumberger Wireline',
+    title: 'Field Engineer to Senior Field Engineer',
+    body: 'Lead engineer for deepwater operations in Louisiana, Angola, and Alaska. Filled in as line manager, technical consultant, and sales engineer on remote projects, and trained local operators, technicians, and engineers. Most of what I know about staying calm during incidents comes from that job.',
+  },
+];
+
+const focus = [
+  ['Agentic engineering and AI-assisted delivery', 'current'],
+  ['TypeScript and web architecture', 'practice'],
+  ['Playwright and test-automation architecture', 'systems'],
+  ['Web performance, security, and accessibility', 'systems'],
+  ['Technical leadership and mentoring', 'teams'],
+];
 ---
 
-<BaseLayout title="Resume" description="Professional experience, skills, and education.">
+<BaseLayout title="Resume" description="Professional experience and background for Chad Sheets.">
   <div class="container">
     <header class="page-header">
       <h1>Resume</h1>
-      <p class="page-subtitle">Professional experience and background.</p>
+      <p class="page-subtitle">Software engineering, technical leadership, and field operations.</p>
     </header>
 
-    <section class="resume-section">
-      <h2>Experience</h2>
-
-      <div class="job">
-        <div class="job__header">
-          <h3 class="job__title">Senior Software Engineer</h3>
-          <span class="job__period">2022 &ndash; Present</span>
-        </div>
-        <p class="job__company">Acme Corp</p>
-        <ul class="job__details">
-          <li>Led development of customer-facing web applications using React and TypeScript</li>
-          <li>Designed and implemented RESTful APIs with Node.js and PostgreSQL</li>
-          <li>Mentored junior developers and established engineering best practices</li>
-          <li>Reduced page load times by 40% through performance optimization</li>
-        </ul>
-      </div>
-
-      <div class="job">
-        <div class="job__header">
-          <h3 class="job__title">Software Engineer</h3>
-          <span class="job__period">2019 &ndash; 2022</span>
-        </div>
-        <p class="job__company">Tech Startup Inc.</p>
-        <ul class="job__details">
-          <li>Built full-stack features for a SaaS platform serving 50k+ users</li>
-          <li>Implemented CI/CD pipelines and automated testing infrastructure</li>
-          <li>Collaborated with design and product teams in an agile environment</li>
-        </ul>
-      </div>
-
-      <div class="job">
-        <div class="job__header">
-          <h3 class="job__title">Junior Developer</h3>
-          <span class="job__period">2017 &ndash; 2019</span>
-        </div>
-        <p class="job__company">Web Agency Co.</p>
-        <ul class="job__details">
-          <li>Developed responsive websites and web applications for clients</li>
-          <li>Maintained and improved existing codebases</li>
-          <li>Participated in code reviews and knowledge sharing</li>
-        </ul>
-      </div>
+    <section aria-labelledby="experience-heading">
+      <h2 id="experience-heading">Experience</h2>
+      <ol class="experience-list">
+        {experience.map((role) => (
+          <li>
+            <div class="when"><strong>{role.when}</strong><span>{role.org}</span></div>
+            <div><h3>{role.title}</h3><p>{role.body}</p></div>
+          </li>
+        ))}
+      </ol>
     </section>
 
-    <section class="resume-section">
-      <h2>Skills</h2>
-      <div class="skills-grid">
-        <div class="skill-group">
-          <h3>Languages</h3>
-          <div class="skill-tags">
-            <span class="skill-tag">TypeScript</span>
-            <span class="skill-tag">JavaScript</span>
-            <span class="skill-tag">Python</span>
-            <span class="skill-tag">SQL</span>
-            <span class="skill-tag">HTML/CSS</span>
-          </div>
-        </div>
-        <div class="skill-group">
-          <h3>Frameworks</h3>
-          <div class="skill-tags">
-            <span class="skill-tag">React</span>
-            <span class="skill-tag">Node.js</span>
-            <span class="skill-tag">Next.js</span>
-            <span class="skill-tag">Express</span>
-            <span class="skill-tag">Next.js</span>
-          </div>
-        </div>
-        <div class="skill-group">
-          <h3>Tools</h3>
-          <div class="skill-tags">
-            <span class="skill-tag">Git</span>
-            <span class="skill-tag">Docker</span>
-            <span class="skill-tag">PostgreSQL</span>
-            <span class="skill-tag">AWS</span>
-            <span class="skill-tag">Linux</span>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="resume-section">
-      <h2>Education</h2>
-      <div class="job">
-        <div class="job__header">
-          <h3 class="job__title">B.S. Computer Science</h3>
-          <span class="job__period">2013 &ndash; 2017</span>
-        </div>
-        <p class="job__company">University of Technology</p>
-      </div>
+    <section aria-labelledby="focus-heading">
+      <h2 id="focus-heading">Focus</h2>
+      <ul class="ruled-list" role="list">
+        {focus.map(([label, note]) => <li><span>{label}</span><span>{note}</span></li>)}
+      </ul>
     </section>
   </div>
 </BaseLayout>
 
 <style>
-  .page-header {
-    padding: 2rem 0 1rem;
-  }
-
-  .page-header h1 {
-    font-size: 2rem;
-    font-weight: 800;
-    margin-bottom: 0.35rem;
-  }
-
-  .page-subtitle {
-    color: var(--color-text-secondary);
-    font-size: 1.05rem;
-  }
-
-  .resume-section {
-    margin-top: 2.5rem;
-  }
-
-  .resume-section h2 {
-    font-size: 1.15rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    color: var(--color-text-muted);
-    margin-top: 0;
-    margin-bottom: 1rem;
-    padding-bottom: 0.5rem;
-    border-bottom: 1px solid var(--color-border);
-  }
-
-  .job {
-    margin-bottom: 2rem;
-  }
-
-  .job__header {
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-  }
-
-  .job__title {
-    font-size: 1.05rem;
-    font-weight: 600;
-    margin: 0;
-  }
-
-  .job__period {
-    font-size: 0.85rem;
-    color: var(--color-text-muted);
-    white-space: nowrap;
-  }
-
-  .job__company {
-    font-size: 0.9rem;
-    color: var(--color-text-secondary);
-    margin-bottom: 0.5rem;
-  }
-
-  .job__details {
-    font-size: 0.9rem;
-    color: var(--color-text-secondary);
-    padding-left: 1.25rem;
-    margin: 0;
-  }
-
-  .job__details li {
-    margin-bottom: 0.25rem;
-  }
-
-  .skills-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 1.5rem;
-  }
-
-  .skill-group h3 {
-    font-size: 0.9rem;
-    font-weight: 600;
-    margin: 0 0 0.5rem;
-  }
-
-  .skill-tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.35rem;
-  }
-
-  .skill-tag {
-    font-size: 0.8rem;
-    padding: 0.25em 0.65em;
-    background: var(--color-code-bg);
-    color: var(--color-text-secondary);
-    border-radius: 4px;
-    border: 1px solid var(--color-border);
-  }
+  .experience-list { margin: 0; padding: 0; list-style: none; }
+  .experience-list > li { display: grid; grid-template-columns: 6.5rem 1fr; gap: 1rem; margin: 0; padding: 1.05rem 0; border-top: 1px solid var(--color-border); }
+  .experience-list > li:last-child { border-bottom: 1px solid var(--color-border); }
+  .when { padding-top: 0.15rem; color: var(--color-text-muted); font-size: 0.78rem; line-height: 1.45; }
+  .when strong, .when span { display: block; }
+  .when strong { color: var(--color-text); font-weight: 600; }
+  .experience-list h3 { margin: 0 0 0.3rem; }
+  .experience-list p { margin: 0; color: var(--color-text-secondary); }
+  .ruled-list { margin: 0; padding: 0; list-style: none; }
+  .ruled-list li { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; margin: 0; padding: 0.55rem 0; border-top: 1px solid var(--color-border); }
+  .ruled-list li:last-child { border-bottom: 1px solid var(--color-border); }
+  .ruled-list li span:last-child { flex: none; color: var(--color-text-muted); font-size: 0.72rem; }
+  @media (max-width: 560px) { .experience-list > li { grid-template-columns: 1fr; gap: 0.35rem; } .when strong, .when span { display: inline; } .when span::before { content: ' · '; } }
 </style>

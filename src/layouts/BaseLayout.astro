@@ -6,10 +6,9 @@ import '../styles/global.css';
 interface Props {
   title: string;
   description?: string;
-  contentMode?: boolean;
 }
 
-const { title, description = 'Personal site with posts, projects, and resume.', contentMode = false } = Astro.props;
+const { title, description = 'Notes, projects, and work by software engineer Chad Sheets.' } = Astro.props;
 ---
 
 <!doctype html>
@@ -22,7 +21,7 @@ const { title, description = 'Personal site with posts, projects, and resume.', 
     <title>{title} | sheets.ch</title>
   </head>
   <body>
-    <Header contentMode={contentMode} pageTitle={contentMode ? title : undefined} />
+    <Header />
     <main class="site-main">
       <slot />
     </main>
@@ -32,7 +31,6 @@ const { title, description = 'Personal site with posts, projects, and resume.', 
 
 <style>
   .site-main {
-    padding-top: calc(var(--header-height) + 2rem);
-    min-height: calc(100vh - var(--header-height));
+    min-height: 60vh;
   }
 </style>

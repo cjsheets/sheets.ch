@@ -2,208 +2,81 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { getCollection } from 'astro:content';
 
-const posts = (await getCollection('posts'))
-  .filter((post) => !post.data.draft)
-  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
-  .slice(0, 5);
+const allPosts = (await getCollection('posts')).filter((post) => !post.data.draft).sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+const posts = allPosts.slice(0, 2);
+const rest = allPosts.slice(2);
+const restYears = [...new Set(rest.map((post) => post.data.date.getFullYear()))];
+const counts = ['No', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine'];
+const restLabel = `${counts[rest.length] ?? rest.length} more${restYears.length === 1 ? ` from ${restYears[0]}` : ''}`;
 
-const projects = (await getCollection('projects'))
-  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
-  .filter((p) => p.data.featured)
-  .slice(0, 3);
-
-const formatDate = (d: Date) =>
-  d.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+const projects = (await getCollection('projects')).sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf()).filter((project) => project.data.featured).slice(0, 3);
 ---
 
-<BaseLayout title="Home">
+<BaseLayout title="Home" description="Chad Sheets is a software engineer at Microsoft working on dependable AI-assisted engineering systems.">
   <div class="container">
-    <section class="hero">
-      <h1>Hello!</h1>
-      <p class="hero__subtitle">
-        I'm Chad — a software developer at Microsoft building solutions for Educators.
-        Originally from Ohio, currently in the Seattle area. I like software, music, coffee and beer.
-        This site is a convenient place to collect notes for my future, forgetful self.
-      </p>
-    </section>
+    <h1 class="sr-only">Chad Sheets</h1>
+    <p class="lede">
+      Software engineer at Microsoft. This is a convenient place to collect notes for my future,
+      forgetful self, and a longer version of the work history than a profile page holds.
+      <span class="aside">(The domain is a surname split at a country code, not a Swiss address.)</span>
+    </p>
 
-    <section class="section">
-      <div class="section__header">
-        <h2>Recent Posts</h2>
-        <a href="/posts" class="section__link">View all &rarr;</a>
-      </div>
-      <ul class="post-list" role="list">
-        {posts.map((post) => (
-          <li class="post-list__item">
-            <a href={`/posts/${post.id}`} class="post-list__link">
-              <span class="post-list__title">{post.data.title}</span>
-              <time class="post-list__date" datetime={post.data.date.toISOString()}>
-                {formatDate(post.data.date)}
-              </time>
-            </a>
-          </li>
-        ))}
+    <ol class="timeline" aria-label="Work history">
+      <li class="timeline__item timeline__item--now">
+        <div class="timeline__when"><strong>Now</strong><span>Commerce Platforms</span><span>2025 –</span></div>
+        <div>
+          <p>Principal AI Engineer. Agents write a lot of our code, and the pipeline decides whether it ships. My time goes into making that dependable: typed services, monorepo conventions, automated validation at pull-request time, and playbooks other engineers can pick up without me.</p>
+          <p><a href="/posts">Validation-first AI-assisted engineering</a>, the working notes.</p>
+        </div>
+      </li>
+      <li class="timeline__item">
+        <div class="timeline__when"><strong>Before</strong><span>Microsoft 365 Education</span><span>2017 – 2025</span></div>
+        <div>
+          <p>Nine years on classroom tools used by millions of students and teachers: Assignments, Classwork, Reading Progress, School Data Sync. UI architecture, test automation, security, performance. Senior IC, then engineering manager, then back to IC.</p>
+          <p>The work that lasted longest is the shared work. A Playwright framework that started as a hackathon project and became the test platform for several products. An integration framework that let new learning tools plug in without custom engineering. A patent application for AI-assisted assessment generation.</p>
+        </div>
+      </li>
+      <li class="timeline__item">
+        <div class="timeline__when"><strong>Before that</strong><span>Schlumberger Wireline</span><span>2009 – 2017</span></div>
+        <div><p>Wireline field engineer in Louisiana, Angola, and Alaska. Deepwater operations, and training the engineers around me. Most of what I know about staying calm during incidents comes from that job.</p></div>
+      </li>
+    </ol>
+
+    <section aria-labelledby="notes-heading">
+      <h2 id="notes-heading">Notes</h2>
+      <ul class="ruled-list" role="list">
+        {posts.map((post) => <li><a href={`/posts/${post.id}`}>{post.data.title}</a><time datetime={post.data.date.toISOString()}>{post.data.date.getFullYear()}</time></li>)}
+        {rest.length > 0 && <li><a href="/posts">{restLabel}</a><span class="tag">archive</span></li>}
       </ul>
     </section>
 
-    {projects.length > 0 && (
-      <section class="section">
-        <div class="section__header">
-          <h2>Featured Projects</h2>
-          <a href="/projects" class="section__link">View all &rarr;</a>
-        </div>
-        <div class="project-grid">
-          {projects.map((project) => (
-            <a
-              href={project.data.url || `/projects/${project.id}`}
-              class="project-card"
-              target={project.data.url ? '_blank' : undefined}
-              rel={project.data.url ? 'noopener' : undefined}
-            >
-              <h3 class="project-card__title">{project.data.title}</h3>
-              <p class="project-card__desc">{project.data.description}</p>
-              <div class="project-card__tags">
-                {project.data.tags.map((tag) => (
-                  <span class="tag-sm">{tag}</span>
-                ))}
-              </div>
-            </a>
-          ))}
-        </div>
-      </section>
-    )}
+    <section aria-labelledby="projects-heading">
+      <h2 id="projects-heading">Projects</h2>
+      <ul class="ruled-list" role="list">
+        {projects.map((project) => <li><a href={project.data.repo ?? project.data.url ?? '/projects'}>{project.data.title}</a><span class="tag">{project.data.date.getFullYear()}</span></li>)}
+      </ul>
+    </section>
   </div>
 </BaseLayout>
 
 <style>
-  .hero {
-    padding: 3rem 0 2rem;
-  }
-
-  .hero h1 {
-    font-size: 2.5rem;
-    font-weight: 800;
-    letter-spacing: -0.03em;
-    margin-bottom: 0.5rem;
-  }
-
-  .hero__subtitle {
-    font-size: 1.15rem;
-    color: var(--color-text-secondary);
-    max-width: 520px;
-    line-height: 1.6;
-  }
-
-  .section {
-    margin-top: 3rem;
-  }
-
-  .section__header {
-    display: flex;
-    align-items: baseline;
-    justify-content: space-between;
-    margin-bottom: 1rem;
-  }
-
-  .section__header h2 {
-    font-size: 1.25rem;
-    margin: 0;
-  }
-
-  .section__link {
-    font-size: 0.85rem;
-    font-weight: 500;
-    color: var(--color-accent);
-  }
-
-  /* Post list */
-  .post-list {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-  }
-
-  .post-list__item {
-    margin: 0;
-  }
-
-  .post-list__link {
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-    gap: 1rem;
-    padding: 0.65rem 0;
-    border-bottom: 1px solid var(--color-border);
-    text-decoration: none;
-    transition: background var(--transition-fast);
-  }
-
-  .post-list__link:hover {
-    background: var(--color-code-bg);
-    padding-left: 0.5rem;
-    padding-right: 0.5rem;
-    margin-left: -0.5rem;
-    margin-right: -0.5rem;
-    border-radius: 6px;
-  }
-
-  .post-list__title {
-    font-weight: 500;
-    color: var(--color-text);
-  }
-
-  .post-list__date {
-    font-size: 0.8rem;
-    color: var(--color-text-muted);
-    white-space: nowrap;
-  }
-
-  /* Project cards */
-  .project-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-    gap: 1rem;
-  }
-
-  .project-card {
-    display: block;
-    padding: 1.25rem;
-    border: 1px solid var(--color-border);
-    border-radius: 8px;
-    text-decoration: none;
-    transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
-  }
-
-  .project-card:hover {
-    border-color: var(--color-accent);
-    box-shadow: 0 2px 12px rgba(26, 115, 232, 0.08);
-  }
-
-  .project-card__title {
-    font-size: 1rem;
-    font-weight: 600;
-    color: var(--color-text);
-    margin: 0 0 0.35rem;
-  }
-
-  .project-card__desc {
-    font-size: 0.85rem;
-    color: var(--color-text-secondary);
-    margin-bottom: 0.75rem;
-    line-height: 1.5;
-  }
-
-  .project-card__tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.3rem;
-  }
-
-  .tag-sm {
-    font-size: 0.7rem;
-    padding: 0.15em 0.5em;
-    background: var(--color-code-bg);
-    color: var(--color-text-muted);
-    border-radius: 3px;
+  .lede { max-width: 36rem; margin: 0 0 2.4rem; }
+  .aside { color: var(--color-text-secondary); }
+  .timeline { margin: 0; padding: 0; list-style: none; }
+  .timeline__item { display: grid; grid-template-columns: 6.5rem 1fr; gap: 1rem; margin: 0; padding: 1.05rem 0; border-top: 1px solid var(--color-border); }
+  .timeline__when { padding-top: 0.15rem; color: var(--color-text-muted); font-size: 0.78rem; line-height: 1.45; }
+  .timeline__when strong, .timeline__when span { display: block; }
+  .timeline__when strong { color: var(--color-text); font-weight: 600; }
+  .timeline__item--now .timeline__when strong { color: var(--color-accent); }
+  .timeline p { margin: 0 0 0.75rem; }
+  .timeline p:last-child { margin-bottom: 0; }
+  .ruled-list { margin: 0; padding: 0; list-style: none; }
+  .ruled-list li { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; margin: 0; padding: 0.55rem 0; border-top: 1px solid var(--color-border); }
+  .ruled-list li:last-child { border-bottom: 1px solid var(--color-border); }
+  .ruled-list time, .ruled-list .tag { flex: none; color: var(--color-text-muted); font-size: 0.72rem; }
+  @media (max-width: 560px) {
+    .timeline__item { grid-template-columns: 1fr; gap: 0.35rem; }
+    .timeline__when span { display: inline; }
+    .timeline__when span + span::before { content: ' · '; }
   }
 </style>

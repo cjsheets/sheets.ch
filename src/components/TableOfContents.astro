@@ -42,22 +42,22 @@ const filteredHeadings = headings.filter((h) => h.depth >= 2 && h.depth <= 3);
 <style>
   .toc {
     position: sticky;
-    top: calc(var(--header-height) + 2rem);
+    top: 2rem;
     align-self: start;
-    max-height: calc(100vh - var(--header-height) - 4rem);
+    max-height: calc(100vh - 4rem);
     overflow-y: auto;
     scrollbar-width: thin;
     scrollbar-color: var(--color-border) transparent;
   }
 
   .toc__inner {
-    padding-left: 1.25rem;
-    border-left: 2px solid var(--color-border);
+    padding-left: 1rem;
+    border-left: 1px solid var(--color-border);
   }
 
   .toc__title {
-    font-size: 0.75rem;
-    font-weight: 700;
+    font-size: 0.7rem;
+    font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.08em;
     color: var(--color-text-muted);
@@ -86,20 +86,16 @@ const filteredHeadings = headings.filter((h) => h.depth >= 2 && h.depth <= 3);
     line-height: 1.4;
     color: var(--color-text-muted);
     text-decoration: none;
-    border-radius: 4px;
-    transition: color var(--transition-fast), background var(--transition-fast),
-      border-color var(--transition-fast);
+    transition: color var(--transition-fast);
   }
 
   .toc__link:hover {
     color: var(--color-text);
-    background: var(--color-code-bg);
   }
 
   .toc__link.active {
     color: var(--color-accent);
     font-weight: 600;
-    background: rgba(26, 115, 232, 0.08);
   }
 
   /* Progress indicator bar on the left border for active section */
@@ -139,7 +135,7 @@ const filteredHeadings = headings.filter((h) => h.depth >= 2 && h.depth <= 3);
     // Use IntersectionObserver for efficient scroll tracking
     const observerOptions: IntersectionObserverInit = {
       root: null,
-      rootMargin: `-${getComputedStyle(document.documentElement).getPropertyValue('--header-height').trim() || '60px'} 0px -60% 0px`,
+        rootMargin: `-24px 0px -60% 0px`,
       threshold: 0,
     };
 
@@ -174,10 +170,7 @@ const filteredHeadings = headings.filter((h) => h.depth >= 2 && h.depth <= 3);
       if (ticking) return;
       ticking = true;
       requestAnimationFrame(() => {
-        const headerOffset = parseInt(
-          getComputedStyle(document.documentElement).getPropertyValue('--header-height') || '60',
-          10
-        );
+        const headerOffset = 24;
 
         // At the bottom of page, activate last heading
         if (window.innerHeight + window.scrollY >= document.body.scrollHeight - 10) {

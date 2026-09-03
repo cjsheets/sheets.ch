@@ -2,114 +2,58 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { getCollection } from 'astro:content';
 
-const projects = (await getCollection('projects'))
-  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+const projects = (await getCollection('projects')).sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
 ---
 
-<BaseLayout title="Projects" description="Collection of projects and things I've built.">
+<BaseLayout title="Projects" description="Selected open-source projects by Chad Sheets.">
   <div class="container">
     <header class="page-header">
       <h1>Projects</h1>
-      <p class="page-subtitle">Things I've built and contributed to.</p>
+      <p class="page-subtitle">Tools and experiments that were useful enough to share.</p>
     </header>
 
-    <div class="project-grid">
+    <ol class="project-list">
       {projects.map((project) => (
-        <div class="project-card">
-          <h3 class="project-card__title">{project.data.title}</h3>
-          <p class="project-card__desc">{project.data.description}</p>
-          <div class="project-card__tags">
-            {project.data.tags.map((tag) => (
-              <span class="tag-sm">{tag}</span>
-            ))}
+        <li class="project">
+          <div class="project__meta">
+            <strong>{project.data.date.getFullYear()}</strong>
+            {project.data.featured && <span>Selected</span>}
           </div>
-          <div class="project-card__links">
-            {project.data.url && (
-              <a href={project.data.url} target="_blank" rel="noopener">
-                Live &rarr;
-              </a>
-            )}
-            {project.data.repo && (
-              <a href={project.data.repo} target="_blank" rel="noopener">
-                Source &rarr;
-              </a>
-            )}
+          <div class="project__body">
+            <h2>{project.data.title}</h2>
+            <p>{project.data.description}</p>
+            <div class="project__footer">
+              <ul class="project__tags" aria-label="Technologies">
+                {project.data.tags.map((tag) => <li>{tag}</li>)}
+              </ul>
+              <div class="project__links">
+                {project.data.url && <a href={project.data.url}>Visit</a>}
+                {project.data.repo && <a href={project.data.repo}>Source</a>}
+              </div>
+            </div>
           </div>
-        </div>
+        </li>
       ))}
-    </div>
+    </ol>
   </div>
 </BaseLayout>
 
 <style>
-  .page-header {
-    padding: 2rem 0 1.5rem;
-  }
-
-  .page-header h1 {
-    font-size: 2rem;
-    font-weight: 800;
-    margin-bottom: 0.35rem;
-  }
-
-  .page-subtitle {
-    color: var(--color-text-secondary);
-    font-size: 1.05rem;
-  }
-
-  .project-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 1.25rem;
-    margin-top: 1rem;
-  }
-
-  .project-card {
-    padding: 1.5rem;
-    border: 1px solid var(--color-border);
-    border-radius: 8px;
-    transition: border-color var(--transition-fast);
-  }
-
-  .project-card:hover {
-    border-color: var(--color-accent);
-  }
-
-  .project-card__title {
-    font-size: 1.1rem;
-    font-weight: 700;
-    margin: 0 0 0.4rem;
-  }
-
-  .project-card__desc {
-    font-size: 0.9rem;
-    color: var(--color-text-secondary);
-    line-height: 1.5;
-    margin-bottom: 0.75rem;
-  }
-
-  .project-card__tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.3rem;
-    margin-bottom: 0.75rem;
-  }
-
-  .tag-sm {
-    font-size: 0.7rem;
-    padding: 0.15em 0.5em;
-    background: var(--color-code-bg);
-    color: var(--color-text-muted);
-    border-radius: 3px;
-  }
-
-  .project-card__links {
-    display: flex;
-    gap: 1rem;
-  }
-
-  .project-card__links a {
-    font-size: 0.8rem;
-    font-weight: 500;
+  .project-list { margin: 0; padding: 0; list-style: none; }
+  .project { display: grid; grid-template-columns: 6.5rem 1fr; gap: 1rem; margin: 0; padding: 1rem 0 1.15rem; border-top: 1px solid var(--color-border); }
+  .project:last-child { border-bottom: 1px solid var(--color-border); }
+  .project__meta { padding-top: 0.15rem; color: var(--color-text-muted); font-family: var(--font-sans); font-size: 0.7rem; line-height: 1.5; }
+  .project__meta strong, .project__meta span { display: block; }
+  .project__meta strong { color: var(--color-text); font-weight: 600; }
+  .project h2 { margin: 0 0 0.35rem; color: var(--color-text); font-family: var(--font-sans); font-size: 1.05rem; font-weight: 600; letter-spacing: 0; text-transform: none; }
+  .project p { margin-bottom: 0.65rem; color: var(--color-text-secondary); }
+  .project__footer { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; }
+  .project__tags { display: flex; flex-wrap: wrap; gap: 0.35rem 0.7rem; margin: 0; padding: 0; list-style: none; color: var(--color-text-muted); font-family: var(--font-sans); font-size: 0.68rem; }
+  .project__tags li { margin: 0; }
+  .project__links { display: flex; gap: 0.8rem; flex: none; font-family: var(--font-sans); font-size: 0.72rem; }
+  @media (max-width: 560px) {
+    .project { grid-template-columns: 1fr; gap: 0.35rem; }
+    .project__meta strong, .project__meta span { display: inline; }
+    .project__meta span::before { content: ' · '; }
   }
 </style>
