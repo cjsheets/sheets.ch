@@ -5,7 +5,13 @@
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
-    "preview": "astro preview"
+    "preview": "astro preview",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "check": "astro check",
+    "test:browser": "npm run build && playwright test",
+    "test:browser:update": "npm run build && playwright test --update-snapshots",
+    "validate": "npm run format:check && npm run check && npm run test:browser"
   },
   "keywords": [],
   "author": "",
@@ -15,5 +21,12 @@
     "@astrojs/mdx": "^4.3.13",
     "@astrojs/sitemap": "^3.7.0",
     "astro": "^5.17.2"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.10",
+    "@playwright/test": "^1.62.1",
+    "prettier": "^3.9.6",
+    "prettier-plugin-astro": "^0.14.1",
+    "typescript": "^6.0.3"
   }
 }

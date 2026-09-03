@@ -24,7 +24,7 @@ const experience = [
     when: '2021 – 2024',
     org: 'Microsoft 365 Education',
     title: 'Senior Software Engineer',
-    body: 'UI architect for a major Education web app as it grew to millions of monthly users, shipped on schedule with performance budgets and bundle-size gates from the first release. Led UI for the product\'s first generative-AI features (co-inventor on a patent application for AI-assisted assessment generation), built the shared Playwright framework at 99%+ reliability and ~40% less manual validation, and owned threat modeling, CSP, the MSAL auth migration, and the annual service security review.',
+    body: "UI architect for a major Education web app as it grew to millions of monthly users, shipped on schedule with performance budgets and bundle-size gates from the first release. Led UI for the product's first generative-AI features (co-inventor on a patent application for AI-assisted assessment generation), built the shared Playwright framework at 99%+ reliability and ~40% less manual validation, and owned threat modeling, CSP, the MSAL auth migration, and the annual service security review.",
   },
   {
     when: '2017 – 2021',
@@ -49,46 +49,132 @@ const focus = [
 ];
 ---
 
-<BaseLayout title="Resume" headerTitle="Resume" description="Professional experience and background for Chad Sheets.">
+<BaseLayout
+  title="Resume"
+  headerTitle="Resume"
+  description="Professional experience and background for Chad Sheets."
+>
   <div class="container">
     <header class="page-header">
       <h1 data-header-title>Resume</h1>
-      <p class="page-subtitle">Software engineering, technical leadership, and field operations.</p>
+      <p class="page-subtitle">
+        Software engineering, technical leadership, and field operations.
+      </p>
     </header>
 
     <section aria-labelledby="experience-heading">
       <h2 id="experience-heading">Experience</h2>
       <ol class="experience-list">
-        {experience.map((role) => (
-          <li>
-            <div class="when"><strong>{role.when}</strong><span>{role.org}</span></div>
-            <div><h3>{role.title}</h3><p>{role.body}</p></div>
-          </li>
-        ))}
+        {
+          experience.map((role) => (
+            <li>
+              <div class="when">
+                <>
+                  <strong>{role.when}</strong>
+                  <span>{role.org}</span>
+                </>
+              </div>
+              <div>
+                <>
+                  <h3>{role.title}</h3>
+                  <p>{role.body}</p>
+                </>
+              </div>
+            </li>
+          ))
+        }
       </ol>
     </section>
 
     <section aria-labelledby="focus-heading">
       <h2 id="focus-heading">Focus</h2>
       <ul class="ruled-list" role="list">
-        {focus.map(([label, note]) => <li><span>{label}</span><span>{note}</span></li>)}
+        {
+          focus.map(([label, note]) => (
+            <li>
+              <>
+                <span>{label}</span>
+                <span>{note}</span>
+              </>
+            </li>
+          ))
+        }
       </ul>
     </section>
   </div>
 </BaseLayout>
 
 <style>
-  .experience-list { margin: 0; padding: 0; list-style: none; }
-  .experience-list > li { display: grid; grid-template-columns: 6.5rem 1fr; gap: 1rem; margin: 0; padding: 1.05rem 0; border-top: 1px solid var(--color-border); }
-  .experience-list > li:last-child { border-bottom: 1px solid var(--color-border); }
-  .when { padding-top: 0.15rem; color: var(--color-text-muted); font-size: 0.78rem; line-height: 1.45; }
-  .when strong, .when span { display: block; }
-  .when strong { color: var(--color-text); font-weight: 600; }
-  .experience-list h3 { margin: 0 0 0.3rem; }
-  .experience-list p { margin: 0; color: var(--color-text-secondary); }
-  .ruled-list { margin: 0; padding: 0; list-style: none; }
-  .ruled-list li { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; margin: 0; padding: 0.55rem 0; border-top: 1px solid var(--color-border); }
-  .ruled-list li:last-child { border-bottom: 1px solid var(--color-border); }
-  .ruled-list li span:last-child { flex: none; color: var(--color-text-muted); font-size: 0.72rem; }
-  @media (max-width: 560px) { .experience-list > li { grid-template-columns: 1fr; gap: 0.35rem; } .when strong, .when span { display: inline; } .when span::before { content: ' · '; } }
+  .experience-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .experience-list > li {
+    display: grid;
+    grid-template-columns: 6.5rem 1fr;
+    gap: 1rem;
+    margin: 0;
+    padding: 1.05rem 0;
+    border-top: 1px solid var(--color-border);
+  }
+  .experience-list > li:last-child {
+    border-bottom: 1px solid var(--color-border);
+  }
+  .when {
+    padding-top: 0.15rem;
+    color: var(--color-text-muted);
+    font-size: 0.78rem;
+    line-height: 1.45;
+  }
+  .when strong,
+  .when span {
+    display: block;
+  }
+  .when strong {
+    color: var(--color-text);
+    font-weight: 600;
+  }
+  .experience-list h3 {
+    margin: 0 0 0.3rem;
+  }
+  .experience-list p {
+    margin: 0;
+    color: var(--color-text-secondary);
+  }
+  .ruled-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .ruled-list li {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+    margin: 0;
+    padding: 0.55rem 0;
+    border-top: 1px solid var(--color-border);
+  }
+  .ruled-list li:last-child {
+    border-bottom: 1px solid var(--color-border);
+  }
+  .ruled-list li span:last-child {
+    flex: none;
+    color: var(--color-text-muted);
+    font-size: 0.72rem;
+  }
+  @media (max-width: 560px) {
+    .experience-list > li {
+      grid-template-columns: 1fr;
+      gap: 0.35rem;
+    }
+    .when strong,
+    .when span {
+      display: inline;
+    }
+    .when span::before {
+      content: ' · ';
+    }
+  }
 </style>

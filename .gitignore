@@ -1,6 +1,8 @@
 node_modules
 dist
 .astro
+playwright-report
+test-results
 
 # Local-only evidence and provenance for generated blog candidates.
 # This may contain chat identifiers, source paths, and private review notes.

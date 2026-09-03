@@ -2,58 +2,137 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { getCollection } from 'astro:content';
 
-const projects = (await getCollection('projects')).sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+const projects = (await getCollection('projects')).sort(
+  (a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
+);
 ---
 
-<BaseLayout title="Projects" headerTitle="Projects" description="Selected open-source projects by Chad Sheets.">
+<BaseLayout
+  title="Projects"
+  headerTitle="Projects"
+  description="Selected open-source projects by Chad Sheets."
+>
   <div class="container">
     <header class="page-header">
       <h1 data-header-title>Projects</h1>
-      <p class="page-subtitle">Tools and experiments that were useful enough to share.</p>
+      <p class="page-subtitle">
+        Tools and experiments that were useful enough to share.
+      </p>
     </header>
 
     <ol class="project-list">
-      {projects.map((project) => (
-        <li class="project">
-          <div class="project__meta">
-            <strong>{project.data.date.getFullYear()}</strong>
-            {project.data.featured && <span>Selected</span>}
-          </div>
-          <div class="project__body">
-            <h2>{project.data.title}</h2>
-            <p>{project.data.description}</p>
-            <div class="project__footer">
-              <ul class="project__tags" aria-label="Technologies">
-                {project.data.tags.map((tag) => <li>{tag}</li>)}
-              </ul>
-              <div class="project__links">
-                {project.data.url && <a href={project.data.url}>Visit</a>}
-                {project.data.repo && <a href={project.data.repo}>Source</a>}
+      {
+        projects.map((project) => (
+          <li class="project">
+            <div class="project__meta">
+              <strong>{project.data.date.getFullYear()}</strong>
+              {project.data.featured && <span>Selected</span>}
+            </div>
+            <div class="project__body">
+              <h2>{project.data.title}</h2>
+              <p>{project.data.description}</p>
+              <div class="project__footer">
+                <ul class="project__tags" aria-label="Technologies">
+                  {project.data.tags.map((tag) => (
+                    <li>{tag}</li>
+                  ))}
+                </ul>
+                <div class="project__links">
+                  {project.data.url && <a href={project.data.url}>Visit</a>}
+                  {project.data.repo && <a href={project.data.repo}>Source</a>}
+                </div>
               </div>
             </div>
-          </div>
-        </li>
-      ))}
+          </li>
+        ))
+      }
     </ol>
   </div>
 </BaseLayout>
 
 <style>
-  .project-list { margin: 0; padding: 0; list-style: none; }
-  .project { display: grid; grid-template-columns: 6.5rem 1fr; gap: 1rem; margin: 0; padding: 1rem 0 1.15rem; border-top: 1px solid var(--color-border); }
-  .project:last-child { border-bottom: 1px solid var(--color-border); }
-  .project__meta { padding-top: 0.15rem; color: var(--color-text-muted); font-family: var(--font-sans); font-size: 0.7rem; line-height: 1.5; }
-  .project__meta strong, .project__meta span { display: block; }
-  .project__meta strong { color: var(--color-text); font-weight: 600; }
-  .project h2 { margin: 0 0 0.35rem; color: var(--color-text); font-family: var(--font-sans); font-size: 1.05rem; font-weight: 600; letter-spacing: 0; text-transform: none; }
-  .project p { margin-bottom: 0.65rem; color: var(--color-text-secondary); }
-  .project__footer { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; }
-  .project__tags { display: flex; flex-wrap: wrap; gap: 0.35rem 0.7rem; margin: 0; padding: 0; list-style: none; color: var(--color-text-muted); font-family: var(--font-sans); font-size: 0.68rem; }
-  .project__tags li { margin: 0; }
-  .project__links { display: flex; gap: 0.8rem; flex: none; font-family: var(--font-sans); font-size: 0.72rem; }
+  .project-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .project {
+    display: grid;
+    grid-template-columns: 6.5rem 1fr;
+    gap: 1rem;
+    margin: 0;
+    padding: 1rem 0 1.15rem;
+    border-top: 1px solid var(--color-border);
+  }
+  .project:last-child {
+    border-bottom: 1px solid var(--color-border);
+  }
+  .project__meta {
+    padding-top: 0.15rem;
+    color: var(--color-text-muted);
+    font-family: var(--font-sans);
+    font-size: 0.7rem;
+    line-height: 1.5;
+  }
+  .project__meta strong,
+  .project__meta span {
+    display: block;
+  }
+  .project__meta strong {
+    color: var(--color-text);
+    font-weight: 600;
+  }
+  .project h2 {
+    margin: 0 0 0.35rem;
+    color: var(--color-text);
+    font-family: var(--font-sans);
+    font-size: 1.05rem;
+    font-weight: 600;
+    letter-spacing: 0;
+    text-transform: none;
+  }
+  .project p {
+    margin-bottom: 0.65rem;
+    color: var(--color-text-secondary);
+  }
+  .project__footer {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+  .project__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem 0.7rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    color: var(--color-text-muted);
+    font-family: var(--font-sans);
+    font-size: 0.68rem;
+  }
+  .project__tags li {
+    margin: 0;
+  }
+  .project__links {
+    display: flex;
+    gap: 0.8rem;
+    flex: none;
+    font-family: var(--font-sans);
+    font-size: 0.72rem;
+  }
   @media (max-width: 560px) {
-    .project { grid-template-columns: 1fr; gap: 0.35rem; }
-    .project__meta strong, .project__meta span { display: inline; }
-    .project__meta span::before { content: ' · '; }
+    .project {
+      grid-template-columns: 1fr;
+      gap: 0.35rem;
+    }
+    .project__meta strong,
+    .project__meta span {
+      display: inline;
+    }
+    .project__meta span::before {
+      content: ' · ';
+    }
   }
 </style>

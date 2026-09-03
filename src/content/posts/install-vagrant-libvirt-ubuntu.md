@@ -1,8 +1,8 @@
 ---
-title: "Install Vagrant + libvirt on Ubuntu 16.04"
-description: "Setting up Vagrant with the libvirt provider on Ubuntu, including the vagrant-mutate plugin for converting boxes."
+title: 'Install Vagrant + libvirt on Ubuntu 16.04'
+description: 'Setting up Vagrant with the libvirt provider on Ubuntu, including the vagrant-mutate plugin for converting boxes.'
 date: 2016-10-02
-tags: ["vagrant", "libvirt", "ubuntu", "linux"]
+tags: ['vagrant', 'libvirt', 'ubuntu', 'linux']
 ---
 
 Vagrant could be installed using the Ubuntu package manager: `apt-get install vagrant`. It's strongly recommended, however, to download the [latest version](https://www.vagrantup.com/downloads.html) from their site and install it manually. Choose 32 or 64 bit \*.deb, download, and install with the following command:
