@@ -2,48 +2,90 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { getCollection } from 'astro:content';
 
-const posts = (await getCollection('posts')).filter((post) => !post.data.draft).sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
-const postsByYear = posts.reduce<Record<string, typeof posts>>((groups, post) => {
-  const year = String(post.data.date.getFullYear());
-  (groups[year] ??= []).push(post);
-  return groups;
-}, {});
+const posts = (await getCollection('posts'))
+  .filter((post) => !post.data.draft)
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+const postsByYear = posts.reduce<Record<string, typeof posts>>(
+  (groups, post) => {
+    const year = String(post.data.date.getFullYear());
+    (groups[year] ??= []).push(post);
+    return groups;
+  },
+  {},
+);
 const years = Object.keys(postsByYear).sort((a, b) => Number(b) - Number(a));
-const formatDate = (date: Date) => date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+const formatDate = (date: Date) =>
+  date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
 ---
 
-<BaseLayout title="Notes" headerTitle="Notes" description="Technical notes by Chad Sheets about software, systems, and the lessons worth remembering.">
+<BaseLayout
+  title="Notes"
+  headerTitle="Notes"
+  description="Technical notes by Chad Sheets about software, systems, and the lessons worth remembering."
+>
   <div class="container">
     <header class="page-header">
       <h1 data-header-title>Notes</h1>
-      <p class="page-subtitle">Things I learned once and would rather not have to rediscover.</p>
+      <p class="page-subtitle">
+        Things I learned once and would rather not have to rediscover.
+      </p>
     </header>
 
-    {years.map((year) => (
-      <section class="year" aria-labelledby={`year-${year}`}>
-        <h2 id={`year-${year}`}>{year}</h2>
-        <ul class="note-list" role="list">
-          {postsByYear[year].map((post) => (
-            <li>
-              <a href={`/posts/${post.id}`}>{post.data.title}</a>
-              <time datetime={post.data.date.toISOString()}>{formatDate(post.data.date)}</time>
-            </li>
-          ))}
-        </ul>
-      </section>
-    ))}
+    {
+      years.map((year) => (
+        <section class="year" aria-labelledby={`year-${year}`}>
+          <h2 id={`year-${year}`}>{year}</h2>
+          <ul class="note-list" role="list">
+            {postsByYear[year].map((post) => (
+              <li>
+                <a href={`/posts/${post.id}`}>{post.data.title}</a>
+                <time datetime={post.data.date.toISOString()}>
+                  {formatDate(post.data.date)}
+                </time>
+              </li>
+            ))}
+          </ul>
+        </section>
+      ))
+    }
   </div>
 </BaseLayout>
 
 <style>
-  .year + .year { margin-top: 2.4rem; }
-  .year h2 { margin-top: 0; }
-  .note-list { margin: 0; padding: 0; list-style: none; }
-  .note-list li { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; margin: 0; padding: 0.55rem 0; border-top: 1px solid var(--color-border); }
-  .note-list li:last-child { border-bottom: 1px solid var(--color-border); }
-  .note-list time { flex: none; color: var(--color-text-muted); font-size: 0.7rem; }
+  .year + .year {
+    margin-top: 2.4rem;
+  }
+  .year h2 {
+    margin-top: 0;
+  }
+  .note-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .note-list li {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 1rem;
+    margin: 0;
+    padding: 0.55rem 0;
+    border-top: 1px solid var(--color-border);
+  }
+  .note-list li:last-child {
+    border-bottom: 1px solid var(--color-border);
+  }
+  .note-list time {
+    flex: none;
+    color: var(--color-text-muted);
+    font-size: 0.7rem;
+  }
   @media (max-width: 560px) {
-    .note-list li { align-items: flex-start; }
-    .note-list time { padding-top: 0.25rem; }
+    .note-list li {
+      align-items: flex-start;
+    }
+    .note-list time {
+      padding-top: 0.25rem;
+    }
   }
 </style>

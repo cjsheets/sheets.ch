@@ -1,8 +1,8 @@
 ---
-title: "Improving the Simplenote Web Client"
-description: "Tweaks to make the Simplenote web client more usable — minimal window decoration, custom styles, and fixing the double-click toggle."
+title: 'Improving the Simplenote Web Client'
+description: 'Tweaks to make the Simplenote web client more usable — minimal window decoration, custom styles, and fixing the double-click toggle.'
 date: 2016-08-01
-tags: ["productivity", "javascript"]
+tags: ['productivity', 'javascript']
 ---
 
 I like Markdown, use Linux, and needed a note taking app that syncs with Android. Simplenote is perfect, right?
@@ -21,7 +21,7 @@ Easy, create a bookmark that removes window decorations:
 javascript: void window.open(
   'https://app.simplenote.com',
   '_blank',
-  'outerWidth=958,outerHeight=567,top=500,left=600,menubar=no,toolbar=no,location=no,personalbar=no,status=no,resizable'
+  'outerWidth=958,outerHeight=567,top=500,left=600,menubar=no,toolbar=no,location=no,personalbar=no,status=no,resizable',
 );
 ```
 

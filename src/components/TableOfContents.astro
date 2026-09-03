@@ -13,31 +13,36 @@ const { headings } = Astro.props;
 const filteredHeadings = headings.filter((h) => h.depth >= 2 && h.depth <= 3);
 ---
 
-{filteredHeadings.length > 0 && (
-  <aside class="toc" aria-label="Table of contents">
-    <div class="toc__inner">
-      <h2 class="toc__title">Contents</h2>
-      <nav>
-        <ul class="toc__list" role="list">
-          {filteredHeadings.map((heading) => (
-            <li
-              class:list={['toc__item', { 'toc__item--sub': heading.depth === 3 }]}
-            >
-              <a
-                href={`#${heading.slug}`}
-                class="toc__link"
-                data-toc-link
-                data-heading-slug={heading.slug}
+{
+  filteredHeadings.length > 0 && (
+    <aside class="toc" aria-label="Table of contents">
+      <div class="toc__inner">
+        <h2 class="toc__title">Contents</h2>
+        <nav>
+          <ul class="toc__list" role="list">
+            {filteredHeadings.map((heading) => (
+              <li
+                class:list={[
+                  'toc__item',
+                  { 'toc__item--sub': heading.depth === 3 },
+                ]}
               >
-                {heading.text}
-              </a>
-            </li>
-          ))}
-        </ul>
-      </nav>
-    </div>
-  </aside>
-)}
+                <a
+                  href={`#${heading.slug}`}
+                  class="toc__link"
+                  data-toc-link
+                  data-heading-slug={heading.slug}
+                >
+                  {heading.text}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </nav>
+      </div>
+    </aside>
+  )
+}
 
 <style>
   .toc {
@@ -112,10 +117,13 @@ const filteredHeadings = headings.filter((h) => h.depth >= 2 && h.depth <= 3);
 
 <script>
   function initToc() {
-    const tocLinks = document.querySelectorAll<HTMLAnchorElement>('[data-toc-link]');
+    const tocLinks =
+      document.querySelectorAll<HTMLAnchorElement>('[data-toc-link]');
     if (tocLinks.length === 0) return;
 
-    const headingSlugs = Array.from(tocLinks).map((link) => link.dataset.headingSlug!);
+    const headingSlugs = Array.from(tocLinks).map(
+      (link) => link.dataset.headingSlug!,
+    );
     const headingElements = headingSlugs
       .map((slug) => document.getElementById(slug))
       .filter(Boolean) as HTMLElement[];
@@ -135,7 +143,7 @@ const filteredHeadings = headings.filter((h) => h.depth >= 2 && h.depth <= 3);
     // Use IntersectionObserver for efficient scroll tracking
     const observerOptions: IntersectionObserverInit = {
       root: null,
-        rootMargin: `-24px 0px -60% 0px`,
+      rootMargin: `-24px 0px -60% 0px`,
       threshold: 0,
     };
 
@@ -173,7 +181,10 @@ const filteredHeadings = headings.filter((h) => h.depth >= 2 && h.depth <= 3);
         const headerOffset = 24;
 
         // At the bottom of page, activate last heading
-        if (window.innerHeight + window.scrollY >= document.body.scrollHeight - 10) {
+        if (
+          window.innerHeight + window.scrollY >=
+          document.body.scrollHeight - 10
+        ) {
           setActive(headingElements[headingElements.length - 1].id);
           ticking = false;
           return;
@@ -184,8 +195,13 @@ const filteredHeadings = headings.filter((h) => h.depth >= 2 && h.depth <= 3);
           let closest = headingElements[0];
           let closestDist = Infinity;
           for (const el of headingElements) {
-            const dist = Math.abs(el.getBoundingClientRect().top - headerOffset - 20);
-            if (el.getBoundingClientRect().top <= headerOffset + 40 && dist < closestDist) {
+            const dist = Math.abs(
+              el.getBoundingClientRect().top - headerOffset - 20,
+            );
+            if (
+              el.getBoundingClientRect().top <= headerOffset + 40 &&
+              dist < closestDist
+            ) {
               closest = el;
               closestDist = dist;
             }

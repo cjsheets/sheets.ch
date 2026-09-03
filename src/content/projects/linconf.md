@@ -1,9 +1,9 @@
 ---
-title: "Linconf"
-description: "An Ansible role organization on GitHub with dependency-free, consistent, extensible, and modular design principles."
+title: 'Linconf'
+description: 'An Ansible role organization on GitHub with dependency-free, consistent, extensible, and modular design principles.'
 date: 2016-07-19
-repo: "https://github.com/linconf"
-tags: ["ansible", "linux", "automation"]
+repo: 'https://github.com/linconf'
+tags: ['ansible', 'linux', 'automation']
 featured: true
 ---
 

@@ -9,7 +9,11 @@ interface Props {
   headerTitle?: string;
 }
 
-const { title, description = 'Notes, projects, and work by software engineer Chad Sheets.', headerTitle } = Astro.props;
+const {
+  title,
+  description = 'Notes, projects, and work by software engineer Chad Sheets.',
+  headerTitle,
+} = Astro.props;
 ---
 
 <!doctype html>
@@ -37,6 +41,8 @@ const { title, description = 'Notes, projects, and work by software engineer Cha
   }
 
   @media (max-width: 560px) {
-    .site-main { padding-top: 2.4rem; }
+    .site-main {
+      padding-top: 2.4rem;
+    }
   }
 </style>

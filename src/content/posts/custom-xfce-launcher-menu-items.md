@@ -1,8 +1,8 @@
 ---
-title: "Custom XFCE Launcher Menu Items"
-description: "How to manually add application launcher shortcuts in XFCE when they fail to register automatically."
+title: 'Custom XFCE Launcher Menu Items'
+description: 'How to manually add application launcher shortcuts in XFCE when they fail to register automatically.'
 date: 2016-08-20
-tags: ["xubuntu", "ubuntu", "linux"]
+tags: ['xubuntu', 'ubuntu', 'linux']
 ---
 
 When an application fails to register a menu shortcut, you can add one manually by creating a file in `/home/<username>/.local/share/applications/`

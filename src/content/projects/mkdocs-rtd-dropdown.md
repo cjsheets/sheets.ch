@@ -1,9 +1,9 @@
 ---
-title: "ReadTheDocs Dropdown"
-description: "A custom MkDocs theme providing collapsible menu support based on the ReadTheDocs design."
+title: 'ReadTheDocs Dropdown'
+description: 'A custom MkDocs theme providing collapsible menu support based on the ReadTheDocs design.'
 date: 2017-10-29
-repo: "https://github.com/cjsheets/mkdocs-rtd-dropdown"
-tags: ["python", "mkdocs", "documentation"]
+repo: 'https://github.com/cjsheets/mkdocs-rtd-dropdown'
+tags: ['python', 'mkdocs', 'documentation']
 featured: true
 ---
 
@@ -23,7 +23,7 @@ Using their theming guide, I set up a theme repository with the ReadTheDocs them
 
 ## Digging Deeper - Hacking MkDocs
 
-The first step in adjusting a MkDocs theme is understanding what the MkDocs source *does* when it parses markdown.
+The first step in adjusting a MkDocs theme is understanding what the MkDocs source _does_ when it parses markdown.
 
 To do this, I [forked mkdocs](https://github.com/cjsheets/mkdocs/tree/dev) and added debugging statements in a new `dev` branch.
 

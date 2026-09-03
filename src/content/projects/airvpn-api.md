@@ -1,9 +1,9 @@
 ---
-title: "AirVPN API - Python Utilities Script"
-description: "A Python CLI application for polling and parsing the AirVPN API to retrieve exit IP addresses for firewall sync."
+title: 'AirVPN API - Python Utilities Script'
+description: 'A Python CLI application for polling and parsing the AirVPN API to retrieve exit IP addresses for firewall sync.'
 date: 2016-07-20
-repo: "https://github.com/cjsheets/airvpn-utils"
-tags: ["python", "api", "vpn"]
+repo: 'https://github.com/cjsheets/airvpn-utils'
+tags: ['python', 'api', 'vpn']
 featured: true
 ---
 

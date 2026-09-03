@@ -1,8 +1,8 @@
 ---
-title: "Automate Docker Hub Builds with GitHub"
-description: "How to set up automated Docker Hub builds triggered by GitHub repository changes."
+title: 'Automate Docker Hub Builds with GitHub'
+description: 'How to set up automated Docker Hub builds triggered by GitHub repository changes.'
 date: 2016-10-04
-tags: ["docker", "github", "automation"]
+tags: ['docker', 'github', 'automation']
 ---
 
 Automating builds of docker containers on [hub.docker.com](https://hub.docker.com/) is a fairly straightforward process, assuming you have a repository on GitHub containing a Dockerfile.
