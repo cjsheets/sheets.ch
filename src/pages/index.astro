@@ -12,35 +12,15 @@ const restLabel = `${counts[rest.length] ?? rest.length} more${restYears.length 
 const projects = (await getCollection('projects')).sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf()).filter((project) => project.data.featured).slice(0, 3);
 ---
 
-<BaseLayout title="Home" description="Chad Sheets is a software engineer at Microsoft working on dependable AI-assisted engineering systems.">
+<BaseLayout title="Home" description="Chad Sheets is a software engineer at Microsoft. Notes on things fixed once, a few projects, and the longer work history.">
   <div class="container">
     <h1 class="sr-only">Chad Sheets</h1>
-    <p class="lede">
-      Software engineer at Microsoft. This is a convenient place to collect notes for my future,
-      forgetful self, and a longer version of the work history than a profile page holds.
-      <span class="aside">(The domain is a surname split at a country code, not a Swiss address.)</span>
-    </p>
-
-    <ol class="timeline" aria-label="Work history">
-      <li class="timeline__item timeline__item--now">
-        <div class="timeline__when"><strong>Now</strong><span>Commerce Platforms</span><span>2025 –</span></div>
-        <div>
-          <p>Principal AI Engineer. Agents write a lot of our code, and the pipeline decides whether it ships. My time goes into making that dependable: typed services, monorepo conventions, automated validation at pull-request time, and playbooks other engineers can pick up without me.</p>
-          <p><a href="/posts">Validation-first AI-assisted engineering</a>, the working notes.</p>
-        </div>
-      </li>
-      <li class="timeline__item">
-        <div class="timeline__when"><strong>Before</strong><span>Microsoft 365 Education</span><span>2017 – 2025</span></div>
-        <div>
-          <p>Nine years on classroom tools used by millions of students and teachers: Assignments, Classwork, Reading Progress, School Data Sync. UI architecture, test automation, security, performance. Senior IC, then engineering manager, then back to IC.</p>
-          <p>The work that lasted longest is the shared work. A Playwright framework that started as a hackathon project and became the test platform for several products. An integration framework that let new learning tools plug in without custom engineering. A patent application for AI-assisted assessment generation.</p>
-        </div>
-      </li>
-      <li class="timeline__item">
-        <div class="timeline__when"><strong>Before that</strong><span>Schlumberger Wireline</span><span>2009 – 2017</span></div>
-        <div><p>Wireline field engineer in Louisiana, Angola, and Alaska. Deepwater operations, and training the engineers around me. Most of what I know about staying calm during incidents comes from that job.</p></div>
-      </li>
-    </ol>
+    <div class="intro">
+      <p>Hi, I'm Chad. I'm an engineer at Microsoft. I spent nine years building classroom tools for students and teachers, and now I work on enterprise commerce software, where a lot of my time goes into how we use AI to write and check code.</p>
+      <p>What I care about most is the person using the thing: whether it loads fast, makes sense the first time, and still works next month. Most of my job is keeping the answer yes.</p>
+      <p>Before software I spent eight years as an oilfield engineer with Schlumberger, in Louisiana, Angola, and Alaska. I grew up in Ohio and live near Seattle.</p>
+      <p>This site is where I keep notes for my future, forgetful self, mostly things I fixed once and will need to fix again. The longer work history is on the <a href="/resume">resume</a>.</p>
+    </div>
 
     <section aria-labelledby="notes-heading">
       <h2 id="notes-heading">Notes</h2>
@@ -60,23 +40,11 @@ const projects = (await getCollection('projects')).sort((a, b) => b.data.date.va
 </BaseLayout>
 
 <style>
-  .lede { max-width: 36rem; margin: 0 0 2.4rem; }
-  .aside { color: var(--color-text-secondary); }
-  .timeline { margin: 0; padding: 0; list-style: none; }
-  .timeline__item { display: grid; grid-template-columns: 6.5rem 1fr; gap: 1rem; margin: 0; padding: 1.05rem 0; border-top: 1px solid var(--color-border); }
-  .timeline__when { padding-top: 0.15rem; color: var(--color-text-muted); font-size: 0.78rem; line-height: 1.45; }
-  .timeline__when strong, .timeline__when span { display: block; }
-  .timeline__when strong { color: var(--color-text); font-weight: 600; }
-  .timeline__item--now .timeline__when strong { color: var(--color-accent); }
-  .timeline p { margin: 0 0 0.75rem; }
-  .timeline p:last-child { margin-bottom: 0; }
+  .intro { max-width: 36rem; margin: 0 0 2.8rem; }
+  .intro p { margin: 0 0 1rem; font-size: 1.05rem; line-height: 1.6; }
+  .intro p:last-child { margin-bottom: 0; }
   .ruled-list { margin: 0; padding: 0; list-style: none; }
   .ruled-list li { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; margin: 0; padding: 0.55rem 0; border-top: 1px solid var(--color-border); }
   .ruled-list li:last-child { border-bottom: 1px solid var(--color-border); }
   .ruled-list time, .ruled-list .tag { flex: none; color: var(--color-text-muted); font-size: 0.72rem; }
-  @media (max-width: 560px) {
-    .timeline__item { grid-template-columns: 1fr; gap: 0.35rem; }
-    .timeline__when span { display: inline; }
-    .timeline__when span + span::before { content: ' · '; }
-  }
 </style>
