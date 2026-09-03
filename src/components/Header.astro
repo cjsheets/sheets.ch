@@ -15,7 +15,7 @@ const currentPath = Astro.url.pathname;
 const isActive = (href: string) => href === '/' ? currentPath === '/' : currentPath.startsWith(href);
 ---
 
-<header class:list={['site-header', { 'site-header--content': pageTitle }]}>
+<header class:list={['site-header', 'site-header--sticky', { 'site-header--content': pageTitle }]}>
   <div class="site-header__inner container">
     <a href="/" class="site-header__identity" aria-label="Chad Sheets">
       <span class="site-header__name">Chad Sheets</span>
@@ -42,16 +42,16 @@ const isActive = (href: string) => href === '/' ? currentPath === '/' : currentP
   .site-header__links a { color: var(--color-text); }
   .site-header__links a[aria-current='page'] { text-decoration-color: var(--color-accent); }
 
-  .site-header--content { position: sticky; top: 0; z-index: 100; background: color-mix(in srgb, var(--color-bg) 92%, transparent); border-bottom: 1px solid transparent; backdrop-filter: saturate(140%) blur(12px); -webkit-backdrop-filter: saturate(140%) blur(12px); transition: border-color var(--transition-fast); }
-  .site-header--content .site-header__inner { align-items: center; padding-top: 1.1rem; padding-bottom: 1.1rem; }
-  .site-header--content .site-header__identity { flex: 1; }
-  .site-header--content.site-header--scrolled { border-color: var(--color-border); }
+  .site-header--sticky { position: sticky; top: 0; z-index: 100; background: color-mix(in srgb, var(--color-bg) 92%, transparent); border-bottom: 1px solid transparent; backdrop-filter: saturate(140%) blur(12px); -webkit-backdrop-filter: saturate(140%) blur(12px); transition: border-color var(--transition-fast); }
+  .site-header--sticky .site-header__inner { align-items: center; padding-top: 1.1rem; padding-bottom: 1.1rem; }
+  .site-header--sticky .site-header__identity { flex: 1; }
+  .site-header--sticky.site-header--scrolled { border-color: var(--color-border); }
   .site-header--content.site-header--scrolled .site-header__name { opacity: 0; transform: translateY(-0.35rem); }
   .site-header--content.site-header--scrolled .site-header__page-title { opacity: 1; transform: translateY(0); }
 
   @media (max-width: 560px) {
     .site-header__inner { align-items: flex-start; padding-top: 2.25rem; padding-bottom: 2.4rem; }
-    .site-header--content .site-header__inner { align-items: flex-start; }
+    .site-header--sticky .site-header__inner { align-items: flex-start; }
     .site-header__page-title { max-width: 38vw; }
     .site-header__links { max-width: 11rem; justify-content: flex-end; gap: 0.4rem 1rem; }
   }
@@ -63,26 +63,37 @@ const isActive = (href: string) => href === '/' ? currentPath === '/' : currentP
 
 <script>
   let headerObserver: IntersectionObserver | undefined;
+  let removeHeaderScrollListener: (() => void) | undefined;
 
   function initHeaderTitle() {
     headerObserver?.disconnect();
+    removeHeaderScrollListener?.();
 
-    const header = document.querySelector<HTMLElement>('.site-header--content');
-    const articleTitle = document.querySelector<HTMLElement>('[data-article-title]');
-    if (!header || !articleTitle) return;
+    const header = document.querySelector<HTMLElement>('.site-header--sticky');
+    const pageTitle = document.querySelector<HTMLElement>('[data-header-title]');
+    if (!header) return;
 
     const setHeaderState = () => {
       header.classList.toggle(
         'site-header--scrolled',
-        articleTitle.getBoundingClientRect().bottom <= header.offsetHeight,
+        pageTitle
+          ? pageTitle.getBoundingClientRect().bottom <= header.offsetHeight
+          : window.scrollY > 0,
       );
     };
+
+    if (!pageTitle) {
+      window.addEventListener('scroll', setHeaderState, { passive: true });
+      removeHeaderScrollListener = () => window.removeEventListener('scroll', setHeaderState);
+      setHeaderState();
+      return;
+    }
 
     headerObserver = new IntersectionObserver(setHeaderState, {
       rootMargin: `-${header.offsetHeight}px 0px 0px 0px`,
       threshold: 0,
     });
-    headerObserver.observe(articleTitle);
+    headerObserver.observe(pageTitle);
     setHeaderState();
   }
 

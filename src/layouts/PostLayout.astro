@@ -20,7 +20,7 @@ const formatDate = (value: Date) => value.toLocaleDateString('en-US', { year: 'n
     <article class="post-content">
       <header class="post-header">
         <p class="eyebrow"><a href="/posts">Notes</a></p>
-        <h1 id="article-title" data-article-title>{title}</h1>
+        <h1 id="article-title" data-header-title>{title}</h1>
         <div class="post-meta">
           <time datetime={date.toISOString()}>{formatDate(date)}</time>
           {updated && <span> · Updated {formatDate(updated)}</span>}
@@ -34,7 +34,7 @@ const formatDate = (value: Date) => value.toLocaleDateString('en-US', { year: 'n
 </BaseLayout>
 
 <style>
-  .post-layout { display: grid; grid-template-columns: 12rem minmax(0, var(--content-width)) 12rem; gap: 3rem; align-items: start; width: min(100% - 2.5rem, 74rem); margin: 4.5rem auto 0; }
+  .post-layout { display: grid; grid-template-columns: 12rem minmax(0, var(--content-width)) 12rem; gap: 3rem; align-items: start; width: min(100% - 2.5rem, 74rem); margin: 0 auto; }
   .post-content { grid-column: 2; min-width: 0; }
   .post-layout :global(.toc) { grid-column: 3; }
   .post-header { margin-bottom: 2.3rem; padding-bottom: 1.2rem; border-bottom: 1px solid var(--color-border); }
@@ -52,6 +52,6 @@ const formatDate = (value: Date) => value.toLocaleDateString('en-US', { year: 'n
     .post-layout :global(.toc) { display: none; }
   }
   @media (max-width: 560px) {
-    .post-layout { width: min(100% - 2rem, var(--content-width)); margin-top: 2.4rem; }
+    .post-layout { width: min(100% - 2rem, var(--content-width)); }
   }
 </style>
