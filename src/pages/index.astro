@@ -2,208 +2,49 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { getCollection } from 'astro:content';
 
-const posts = (await getCollection('posts'))
-  .filter((post) => !post.data.draft)
-  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
-  .slice(0, 5);
+const allPosts = (await getCollection('posts')).filter((post) => !post.data.draft).sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+const posts = allPosts.slice(0, 2);
+const rest = allPosts.slice(2);
+const restYears = [...new Set(rest.map((post) => post.data.date.getFullYear()))];
+const counts = ['No', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine'];
+const restLabel = `${counts[rest.length] ?? rest.length} more${restYears.length === 1 ? ` from ${restYears[0]}` : ''}`;
 
-const projects = (await getCollection('projects'))
-  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
-  .filter((p) => p.data.featured)
-  .slice(0, 3);
-
-const formatDate = (d: Date) =>
-  d.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+const projects = (await getCollection('projects')).sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf()).filter((project) => project.data.featured).slice(0, 3);
 ---
 
-<BaseLayout title="Home">
+<BaseLayout title="Home" description="Chad Sheets is a software engineer at Microsoft. Notes on things fixed once, a few projects, and the longer work history.">
   <div class="container">
-    <section class="hero">
-      <h1>Hello!</h1>
-      <p class="hero__subtitle">
-        I'm Chad — a software developer at Microsoft building solutions for Educators.
-        Originally from Ohio, currently in the Seattle area. I like software, music, coffee and beer.
-        This site is a convenient place to collect notes for my future, forgetful self.
-      </p>
-    </section>
+    <h1 class="sr-only">Chad Sheets</h1>
+    <div class="intro">
+      <p>Hi, I'm Chad. I'm an engineer at Microsoft. I spent nine years building classroom tools for students and teachers, and now I work on enterprise commerce software, where a lot of my time goes into how we use AI to write and check code.</p>
+      <p>What I care about most is the person using the thing: whether it loads fast, makes sense the first time, and still works next month. Most of my job is keeping the answer yes.</p>
+      <p>Before software I spent eight years as an oilfield engineer with Schlumberger, in Louisiana, Angola, and Alaska. I grew up in Ohio and live near Seattle.</p>
+      <p>This site is where I keep notes for my future, forgetful self, mostly things I fixed once and will need to fix again. The longer work history is on the <a href="/resume">resume</a>.</p>
+    </div>
 
-    <section class="section">
-      <div class="section__header">
-        <h2>Recent Posts</h2>
-        <a href="/posts" class="section__link">View all &rarr;</a>
-      </div>
-      <ul class="post-list" role="list">
-        {posts.map((post) => (
-          <li class="post-list__item">
-            <a href={`/posts/${post.id}`} class="post-list__link">
-              <span class="post-list__title">{post.data.title}</span>
-              <time class="post-list__date" datetime={post.data.date.toISOString()}>
-                {formatDate(post.data.date)}
-              </time>
-            </a>
-          </li>
-        ))}
+    <section aria-labelledby="notes-heading">
+      <h2 id="notes-heading">Notes</h2>
+      <ul class="ruled-list" role="list">
+        {posts.map((post) => <li><a href={`/posts/${post.id}`}>{post.data.title}</a><time datetime={post.data.date.toISOString()}>{post.data.date.getFullYear()}</time></li>)}
+        {rest.length > 0 && <li><a href="/posts">{restLabel}</a><span class="tag">archive</span></li>}
       </ul>
     </section>
 
-    {projects.length > 0 && (
-      <section class="section">
-        <div class="section__header">
-          <h2>Featured Projects</h2>
-          <a href="/projects" class="section__link">View all &rarr;</a>
-        </div>
-        <div class="project-grid">
-          {projects.map((project) => (
-            <a
-              href={project.data.url || `/projects/${project.id}`}
-              class="project-card"
-              target={project.data.url ? '_blank' : undefined}
-              rel={project.data.url ? 'noopener' : undefined}
-            >
-              <h3 class="project-card__title">{project.data.title}</h3>
-              <p class="project-card__desc">{project.data.description}</p>
-              <div class="project-card__tags">
-                {project.data.tags.map((tag) => (
-                  <span class="tag-sm">{tag}</span>
-                ))}
-              </div>
-            </a>
-          ))}
-        </div>
-      </section>
-    )}
+    <section aria-labelledby="projects-heading">
+      <h2 id="projects-heading">Projects</h2>
+      <ul class="ruled-list" role="list">
+        {projects.map((project) => <li><a href={project.data.repo ?? project.data.url ?? '/projects'}>{project.data.title}</a><span class="tag">{project.data.date.getFullYear()}</span></li>)}
+      </ul>
+    </section>
   </div>
 </BaseLayout>
 
 <style>
-  .hero {
-    padding: 3rem 0 2rem;
-  }
-
-  .hero h1 {
-    font-size: 2.5rem;
-    font-weight: 800;
-    letter-spacing: -0.03em;
-    margin-bottom: 0.5rem;
-  }
-
-  .hero__subtitle {
-    font-size: 1.15rem;
-    color: var(--color-text-secondary);
-    max-width: 520px;
-    line-height: 1.6;
-  }
-
-  .section {
-    margin-top: 3rem;
-  }
-
-  .section__header {
-    display: flex;
-    align-items: baseline;
-    justify-content: space-between;
-    margin-bottom: 1rem;
-  }
-
-  .section__header h2 {
-    font-size: 1.25rem;
-    margin: 0;
-  }
-
-  .section__link {
-    font-size: 0.85rem;
-    font-weight: 500;
-    color: var(--color-accent);
-  }
-
-  /* Post list */
-  .post-list {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-  }
-
-  .post-list__item {
-    margin: 0;
-  }
-
-  .post-list__link {
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-    gap: 1rem;
-    padding: 0.65rem 0;
-    border-bottom: 1px solid var(--color-border);
-    text-decoration: none;
-    transition: background var(--transition-fast);
-  }
-
-  .post-list__link:hover {
-    background: var(--color-code-bg);
-    padding-left: 0.5rem;
-    padding-right: 0.5rem;
-    margin-left: -0.5rem;
-    margin-right: -0.5rem;
-    border-radius: 6px;
-  }
-
-  .post-list__title {
-    font-weight: 500;
-    color: var(--color-text);
-  }
-
-  .post-list__date {
-    font-size: 0.8rem;
-    color: var(--color-text-muted);
-    white-space: nowrap;
-  }
-
-  /* Project cards */
-  .project-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-    gap: 1rem;
-  }
-
-  .project-card {
-    display: block;
-    padding: 1.25rem;
-    border: 1px solid var(--color-border);
-    border-radius: 8px;
-    text-decoration: none;
-    transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
-  }
-
-  .project-card:hover {
-    border-color: var(--color-accent);
-    box-shadow: 0 2px 12px rgba(26, 115, 232, 0.08);
-  }
-
-  .project-card__title {
-    font-size: 1rem;
-    font-weight: 600;
-    color: var(--color-text);
-    margin: 0 0 0.35rem;
-  }
-
-  .project-card__desc {
-    font-size: 0.85rem;
-    color: var(--color-text-secondary);
-    margin-bottom: 0.75rem;
-    line-height: 1.5;
-  }
-
-  .project-card__tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.3rem;
-  }
-
-  .tag-sm {
-    font-size: 0.7rem;
-    padding: 0.15em 0.5em;
-    background: var(--color-code-bg);
-    color: var(--color-text-muted);
-    border-radius: 3px;
-  }
+  .intro { max-width: 36rem; margin: 0 0 2.8rem; }
+  .intro p { margin: 0 0 1rem; font-size: 1.05rem; line-height: 1.6; }
+  .intro p:last-child { margin-bottom: 0; }
+  .ruled-list { margin: 0; padding: 0; list-style: none; }
+  .ruled-list li { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; margin: 0; padding: 0.55rem 0; border-top: 1px solid var(--color-border); }
+  .ruled-list li:last-child { border-bottom: 1px solid var(--color-border); }
+  .ruled-list time, .ruled-list .tag { flex: none; color: var(--color-text-muted); font-size: 0.72rem; }
 </style>

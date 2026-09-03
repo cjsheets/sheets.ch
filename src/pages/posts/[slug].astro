@@ -3,7 +3,10 @@ import { getCollection, render } from 'astro:content';
 import PostLayout from '../../layouts/PostLayout.astro';
 
 export async function getStaticPaths() {
-  const posts = await getCollection('posts');
+  // Drafts can contain material that is still awaiting provenance, privacy,
+  // and editorial review. Excluding them here keeps them out of the generated
+  // site entirely, not merely out of the posts index.
+  const posts = (await getCollection('posts')).filter((post) => !post.data.draft);
   return posts.map((post) => ({
     params: { slug: post.id },
     props: { post },
