@@ -6,9 +6,10 @@ import '../styles/global.css';
 interface Props {
   title: string;
   description?: string;
+  headerTitle?: string;
 }
 
-const { title, description = 'Notes, projects, and work by software engineer Chad Sheets.' } = Astro.props;
+const { title, description = 'Notes, projects, and work by software engineer Chad Sheets.', headerTitle } = Astro.props;
 ---
 
 <!doctype html>
@@ -21,7 +22,7 @@ const { title, description = 'Notes, projects, and work by software engineer Cha
     <title>{title} | sheets.ch</title>
   </head>
   <body>
-    <Header />
+    <Header pageTitle={headerTitle} />
     <main class="site-main">
       <slot />
     </main>

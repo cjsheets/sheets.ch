@@ -1,4 +1,10 @@
 ---
+interface Props {
+  pageTitle?: string;
+}
+
+const { pageTitle } = Astro.props;
+
 const navLinks = [
   { href: '/', label: 'About' },
   { href: '/posts', label: 'Notes' },
@@ -9,26 +15,77 @@ const currentPath = Astro.url.pathname;
 const isActive = (href: string) => href === '/' ? currentPath === '/' : currentPath.startsWith(href);
 ---
 
-<header class="site-header container">
-  <a href="/" class="site-header__name">Chad Sheets</a>
-  <nav aria-label="Site">
-    <ul class="site-header__links" role="list">
-      {navLinks.map(({ href, label }) => (
-        <li><a href={href} aria-current={isActive(href) ? 'page' : undefined}>{label}</a></li>
-      ))}
-    </ul>
-  </nav>
+<header class:list={['site-header', { 'site-header--content': pageTitle }]}>
+  <div class="site-header__inner container">
+    <a href="/" class="site-header__identity" aria-label="Chad Sheets">
+      <span class="site-header__name">Chad Sheets</span>
+      {pageTitle && <span class="site-header__page-title" aria-hidden="true">{pageTitle}</span>}
+    </a>
+    <nav aria-label="Site">
+      <ul class="site-header__links" role="list">
+        {navLinks.map(({ href, label }) => (
+          <li><a href={href} aria-current={isActive(href) ? 'page' : undefined}>{label}</a></li>
+        ))}
+      </ul>
+    </nav>
+  </div>
 </header>
 
 <style>
-  .site-header { display: flex; align-items: baseline; justify-content: space-between; gap: 2rem; padding-top: 3.5rem; padding-bottom: 3.2rem; }
-  .site-header__name { flex: none; font-size: 1.3rem; font-weight: 500; letter-spacing: -0.015em; text-decoration: none; }
+  .site-header__inner { display: flex; align-items: baseline; justify-content: space-between; gap: 2rem; padding-top: 3.5rem; padding-bottom: 3.2rem; }
+  .site-header__identity { display: grid; min-width: 0; text-decoration: none; }
+  .site-header__name, .site-header__page-title { grid-area: 1 / 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; transition: opacity 300ms ease, transform 300ms ease; }
+  .site-header__name { font-size: 1.3rem; font-weight: 500; letter-spacing: -0.015em; }
+  .site-header__page-title { align-self: center; max-width: 30rem; opacity: 0; transform: translateY(0.35rem); font-size: 0.95rem; font-weight: 600; letter-spacing: -0.01em; }
   .site-header__links { display: flex; flex-wrap: wrap; gap: 1.35rem; margin: 0; padding: 0; list-style: none; font-size: 0.92rem; }
   .site-header__links li { margin: 0; }
   .site-header__links a { color: var(--color-text); }
   .site-header__links a[aria-current='page'] { text-decoration-color: var(--color-accent); }
+
+  .site-header--content { position: sticky; top: 0; z-index: 100; background: color-mix(in srgb, var(--color-bg) 92%, transparent); border-bottom: 1px solid transparent; backdrop-filter: saturate(140%) blur(12px); -webkit-backdrop-filter: saturate(140%) blur(12px); transition: border-color var(--transition-fast); }
+  .site-header--content .site-header__inner { align-items: center; padding-top: 1.1rem; padding-bottom: 1.1rem; }
+  .site-header--content .site-header__identity { flex: 1; }
+  .site-header--content.site-header--scrolled { border-color: var(--color-border); }
+  .site-header--content.site-header--scrolled .site-header__name { opacity: 0; transform: translateY(-0.35rem); }
+  .site-header--content.site-header--scrolled .site-header__page-title { opacity: 1; transform: translateY(0); }
+
   @media (max-width: 560px) {
-    .site-header { align-items: flex-start; padding-top: 2.25rem; padding-bottom: 2.4rem; }
+    .site-header__inner { align-items: flex-start; padding-top: 2.25rem; padding-bottom: 2.4rem; }
+    .site-header--content .site-header__inner { align-items: flex-start; }
+    .site-header__page-title { max-width: 38vw; }
     .site-header__links { max-width: 11rem; justify-content: flex-end; gap: 0.4rem 1rem; }
   }
+
+  @media (prefers-reduced-motion: reduce) {
+    .site-header__name, .site-header__page-title { transition: none; }
+  }
 </style>
+
+<script>
+  let headerObserver: IntersectionObserver | undefined;
+
+  function initHeaderTitle() {
+    headerObserver?.disconnect();
+
+    const header = document.querySelector<HTMLElement>('.site-header--content');
+    const articleTitle = document.querySelector<HTMLElement>('[data-article-title]');
+    if (!header || !articleTitle) return;
+
+    const setHeaderState = () => {
+      header.classList.toggle(
+        'site-header--scrolled',
+        articleTitle.getBoundingClientRect().bottom <= header.offsetHeight,
+      );
+    };
+
+    headerObserver = new IntersectionObserver(setHeaderState, {
+      rootMargin: `-${header.offsetHeight}px 0px 0px 0px`,
+      threshold: 0,
+    });
+    headerObserver.observe(articleTitle);
+    setHeaderState();
+  }
+
+  initHeaderTitle();
+  document.addEventListener('astro:page-load', initHeaderTitle);
+</script>
