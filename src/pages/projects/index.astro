@@ -5,10 +5,10 @@ import { getCollection } from 'astro:content';
 const projects = (await getCollection('projects')).sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
 ---
 
-<BaseLayout title="Projects" description="Selected open-source projects by Chad Sheets.">
+<BaseLayout title="Projects" headerTitle="Projects" description="Selected open-source projects by Chad Sheets.">
   <div class="container">
     <header class="page-header">
-      <h1>Projects</h1>
+      <h1 data-header-title>Projects</h1>
       <p class="page-subtitle">Tools and experiments that were useful enough to share.</p>
     </header>
 

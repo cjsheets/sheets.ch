@@ -15,12 +15,12 @@ const { title, description, date, updated, tags = [], headings } = Astro.props;
 const formatDate = (value: Date) => value.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
 ---
 
-<BaseLayout title={title} description={description}>
-  <div class="post-layout container--wide">
+<BaseLayout title={title} description={description} headerTitle={title}>
+  <div class="post-layout">
     <article class="post-content">
       <header class="post-header">
         <p class="eyebrow"><a href="/posts">Notes</a></p>
-        <h1>{title}</h1>
+        <h1 id="article-title" data-header-title>{title}</h1>
         <div class="post-meta">
           <time datetime={date.toISOString()}>{formatDate(date)}</time>
           {updated && <span> · Updated {formatDate(updated)}</span>}
@@ -34,8 +34,9 @@ const formatDate = (value: Date) => value.toLocaleDateString('en-US', { year: 'n
 </BaseLayout>
 
 <style>
-  .post-layout { display: grid; grid-template-columns: minmax(0, 44rem) 12rem; justify-content: center; gap: 3rem; align-items: start; }
-  .post-content { min-width: 0; }
+  .post-layout { display: grid; grid-template-columns: 12rem minmax(0, var(--content-width)) 12rem; gap: 3rem; align-items: start; width: min(100% - 2.5rem, 74rem); margin: 0 auto; }
+  .post-content { grid-column: 2; min-width: 0; }
+  .post-layout :global(.toc) { grid-column: 3; }
   .post-header { margin-bottom: 2.3rem; padding-bottom: 1.2rem; border-bottom: 1px solid var(--color-border); }
   .eyebrow { margin: 0 0 0.6rem; color: var(--color-accent); font-size: 0.72rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; }
   .post-header h1 { max-width: 40rem; }
@@ -44,6 +45,13 @@ const formatDate = (value: Date) => value.toLocaleDateString('en-US', { year: 'n
   .post-tags li { margin: 0; }
   .prose :global(h2) { margin-top: 2.8rem; }
   .prose :global(h3) { margin-top: 1.9rem; }
+  .prose :global(h2), .prose :global(h3) { scroll-margin-top: 6rem; }
   .prose :global(a) { text-decoration-color: color-mix(in srgb, var(--color-accent) 40%, transparent); }
-  @media (max-width: 980px) { .post-layout { grid-template-columns: minmax(0, 44rem); } }
+  @media (max-width: 76.5rem) {
+    .post-layout { display: block; width: min(100% - 2.5rem, var(--content-width)); }
+    .post-layout :global(.toc) { display: none; }
+  }
+  @media (max-width: 560px) {
+    .post-layout { width: min(100% - 2rem, var(--content-width)); }
+  }
 </style>

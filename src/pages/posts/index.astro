@@ -12,10 +12,10 @@ const years = Object.keys(postsByYear).sort((a, b) => Number(b) - Number(a));
 const formatDate = (date: Date) => date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
 ---
 
-<BaseLayout title="Notes" description="Technical notes by Chad Sheets about software, systems, and the lessons worth remembering.">
+<BaseLayout title="Notes" headerTitle="Notes" description="Technical notes by Chad Sheets about software, systems, and the lessons worth remembering.">
   <div class="container">
     <header class="page-header">
-      <h1>Notes</h1>
+      <h1 data-header-title>Notes</h1>
       <p class="page-subtitle">Things I learned once and would rather not have to rediscover.</p>
     </header>
 
