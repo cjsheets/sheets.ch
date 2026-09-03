@@ -1,0 +1,111 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const repo = 'https://github.com/cjsheets/sheets.ch';
+const updated = new Date('2026-09-02');
+const updatedIso = updated.toISOString();
+const updatedLabel = updated.toLocaleDateString('en-US', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+  timeZone: 'UTC',
+});
+---
+
+<BaseLayout
+  title="About this site"
+  headerTitle="About this site"
+  description="What runs sheets.ch, what it collects about visitors (nothing), and how the writing and code can be reused."
+>
+  <div class="container">
+    <header class="page-header">
+      <h1 data-header-title>About this site</h1>
+      <p class="page-subtitle">
+        What runs here, what it collects, and what you can do with it.
+      </p>
+    </header>
+
+    <div class="site-notes">
+      <section aria-labelledby="tracking-heading">
+        <h2 id="tracking-heading">Tracking</h2>
+        <p>
+          This site is static HTML built with Astro and served by Cloudflare.
+          There are no analytics, cookies, forms, or third-party scripts. I
+          don't know who you are and I'm not trying to find out.
+        </p>
+        <p>
+          Cloudflare sees the request logs it needs to serve the pages (IP
+          address, user agent, that kind of thing). What it keeps is covered by
+          <a href="https://www.cloudflare.com/privacypolicy/"
+            >Cloudflare's privacy policy</a
+          >. If I add analytics later, I'll say so here.
+        </p>
+      </section>
+
+      <section aria-labelledby="reuse-heading">
+        <h2 id="reuse-heading">Reuse</h2>
+        <p>
+          The writing is licensed
+          <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>.
+          Copy, quote, or translate it and link back here.
+        </p>
+        <p>
+          Code samples in the notes are licensed
+          <a href="https://opensource.org/license/mit-0">MIT-0</a>, so paste
+          them wherever you like without an attribution line. The site's own
+          source is MIT and lives <a href={repo}>on GitHub</a>.
+        </p>
+      </section>
+
+      <section aria-labelledby="caveats-heading">
+        <h2 id="caveats-heading">Caveats</h2>
+        <p>
+          Most notes here are things I fixed once, written down so I can fix
+          them again. They worked on my machine on the day I wrote them.
+          Versions drift and defaults change, so test anything before running it
+          somewhere that matters. Everything is provided as-is, without
+          warranty.
+        </p>
+        <p>
+          Product names belong to their owners. Opinions are mine, not my
+          employer's.
+        </p>
+      </section>
+
+      <section aria-labelledby="contact-heading">
+        <h2 id="contact-heading">Contact</h2>
+        <p>
+          Found an error, or something of yours used without credit?
+          <a href={`${repo}/issues`}>Open an issue</a> on the source repo.
+        </p>
+      </section>
+
+      <p class="meta">
+        Last updated <time datetime={updatedIso}>{updatedLabel}</time>.
+      </p>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .site-notes {
+    max-width: 36rem;
+  }
+  .site-notes section + section {
+    margin-top: 2rem;
+  }
+  .site-notes h2 {
+    margin-top: 0;
+  }
+  .site-notes p {
+    margin: 0 0 1rem;
+  }
+  .site-notes p:last-child {
+    margin-bottom: 0;
+  }
+  .site-notes .meta {
+    margin-top: 2.4rem;
+    color: var(--color-text-muted);
+    font-size: 0.72rem;
+  }
+</style>
